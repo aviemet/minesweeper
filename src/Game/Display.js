@@ -2,7 +2,7 @@ import React from 'react';
 
 const Display = ({mines}) => {
 	return (
-		<div></div>
+		<div>Minesweeper</div>
 	)
 };
 

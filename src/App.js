@@ -1,22 +1,28 @@
 import React from 'react';
-import Game from './Game';
+import Router from './Router';
 
 import './App.css';
 import styled from 'styled-components';
+import { GameProvider } from './context/GameStore';
+import { RouteProvider } from './context/Routes';
 
 const GameStyles = styled.div`
   width: 100%;
   height: 100%;
   background: #222;
-  display: block;
   text-align: center;
+  display: flex;
 `;
 
 function App() {
   return (
-    <GameStyles>
-      <Game />
-    </GameStyles>
+    <GameProvider>
+      <RouteProvider>
+        <GameStyles>
+          <Router />
+        </GameStyles>
+      </RouteProvider>
+    </GameProvider>
   );
 }
 

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Display from './Display';
 import Board from './Board';
 
 import styled from 'styled-components';
+import { useGame } from '../context/GameStore';
 
 const GameBoard = styled.div`
 	border: 1px solid white;
@@ -12,20 +13,14 @@ const GameBoard = styled.div`
 `;
 
 const Game = () => {
-	const [ height, setHeight ] = useState(8);
-	const [ width, setWidth ] = useState(8);
-	const [ mines, setMines ] = useState(10);
+	const [{ game }] = useGame();
 
 	return (
 		<GameBoard>
 			<Display 
-				mines={mines}
+				mines={game.mines}
 			/>
-			<Board 
-				height={height}
-				width={width}
-				mines={mines}
-			/>
+			<Board />
 		</GameBoard>
 	);
 }

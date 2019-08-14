@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useGame } from '../context/GameStore';
-import { useRoutes } from '../context/Routes';
+import { useRoutes } from '../context/RouteStore';
 
 const DifficultyButton = styled.div`
 	width: 250px;
@@ -13,16 +13,13 @@ const DifficultyButton = styled.div`
 `;
 
 const DifficultyChoice = props => {
-	const [{ game }, gameDispatch] = useGame();
+	const game = useGame();
 	const [{ currentPage }, routerDispatch] = useRoutes();
 
 	const { width, height, mines } = props.dimensions;
 
 	const startGame = () => {
-		gameDispatch({
-			type: 'new',
-			args: {width, height, mines}
-		});
+		game.newGame(width, height, mines);
 
 		routerDispatch({
 			type: 'navigate',

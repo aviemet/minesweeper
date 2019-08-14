@@ -4,7 +4,7 @@ import Cell from './Cell';
 
 import styled from 'styled-components';
 import { useGame } from '../context/GameStore';
-import { useRoutes } from '../context/Routes';
+import { useRoutes } from '../context/RouteStore';
 
 const Row = styled.div`
 	display: block;
@@ -12,11 +12,19 @@ const Row = styled.div`
 
 const GameBoard = styled.div`
 	border: 1px solid white;
+
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
 `;
 
 const Board = () => {
 
-	const [{ game }] = useGame();
+	const game = useGame();
 	console.log({game})
 	const [{ currentPage }, routerDispatch] = useRoutes();
 
@@ -29,8 +37,16 @@ const Board = () => {
 		}
 	}
 
+	// Right click
+	const disableContextMenu = e => {
+		e.preventDefault();
+	}
+
 	return (
-		<GameBoard onClick={resetIfGameOver}>{
+		<GameBoard 
+			onClick={resetIfGameOver}
+			onContextMenu={disableContextMenu}
+		>{
 			[...Array(game.height)].map((_, y) => {
 				return(
 					<Row key={y}>{
@@ -40,8 +56,8 @@ const Board = () => {
 							return(
 								<Cell
 									key={coord}
-									{...cell}
-									gameOver={game.gameOver}
+									coord={coord}
+									cell={cell}
 								/>
 							)
 						})

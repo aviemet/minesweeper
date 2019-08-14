@@ -1,22 +1,14 @@
+import { observable } from "mobx";
+
 class MinesweeperGame {
-	board = [[]];
 	width = 0;
 	height = 0;
 	mines = 0;
 	mineLocations = new Map();
-	gameOver = false;
 
-	newGame(width, height, mines) {
-		this.gameOver = false;
-		this.width = width;
-		this.height = height;
-		this.mines = mines;
-		this.board = this._buildBoard(width, height, mines);
-	}
-
-	revealCell(x, y) {
-		this.board[this.getIndexFromCoords(x,y)].hidden = false;
-	}
+	@observable clicks = new Set();
+	@observable board = [];
+	@observable gameOver = false;
 
 	getCoordsFromIndex(index) {
 		const x = index % this.width;
@@ -30,32 +22,71 @@ class MinesweeperGame {
 	}
 
 	/**
-	 * Create x * y array of objects with cell data
+	 * Start a new game
+	 * @param {int} width Width of game board
+	 * @param {int} height Height of game board
+	 * @param {int} mines Number of mines
+	 */
+	newGame(width, height, mines) {
+		// TODO: bounds check for mines
+		this.gameOver = false;
+		this.width = width;
+		this.height = height;
+		this.mines = mines;
+		this._buildBoard(width, height, mines);
+	}
+
+	/**
+	 * Expose group of empty cells when clicking on an empty cell
+	 */
+	exposeEmptyCells(x, y, set) {
+		if(!set) set = new Set();
+
+		const initialCoord = this.getIndexFromCoords(x, y);
+
+		this.board[initialCoord].surroundingCells((cell, coord) => {
+			cell.hidden = false;
+
+			// Recurse if it has neighboring mine count of 0 and hasn't been touched yet
+			if(cell.neighbors === 0 && !set.has(coord)) {
+				set.add(coord);
+				this.exposeEmptyCells(cell.x, cell.y, set);
+			}
+		});		
+	}
+
+	endGame() {
+		// Wait a tick to allow click event propagation
+		setTimeout(() => {
+			this.gameOver = true;
+
+			// Reveal Mines
+			this.mineLocations.forEach(coord => {
+				this.board[coord].hidden = false;
+			});
+		}, 1);
+	}
+
+	/**
+	 * Build 1D array representing game board
+	 * Instantiate new cell for each position
 	 */
 	_buildBoard() {
 		this.mineLocations = this._plantMines();
 		
-		let grid = [];
+		this.board = [];
 		for(let y = 0; y < this.height; y++) {
 			for(let x = 0; x < this.width; x++) {
 				const coord = this.getIndexFromCoords(x, y);
-				grid.push({
-					x,
-					y,
-					mine: this.mineLocations.has(coord),
-					neighbors: 0,
-					hidden: true
-				});
+				this.board.push(new Cell( x, y, this.mineLocations.has(coord), this ));
 			}
 		}
 		
-		this._calcNeighboringMines(grid);
-	
-		return grid;
+		this._calcNeighboringMines();
 	}
 	
 	/**
-	 * Store map of random mine locations
+	 * Store set of random mine locations
 	 */
 	_plantMines() {
 		let mineLocations = new Set();
@@ -73,82 +104,104 @@ class MinesweeperGame {
 	/**
 	 * Pre calculate the neighboring mine count for each cell
 	 */
-	_calcNeighboringMines(grid) {
-		const movements = [-1,0,1];
-		
-		this.mineLocations.forEach((value, index) => {
-			const { x, y } = this.getCoordsFromIndex(index);
-			
-			movements.forEach(xdir => {
-				movements.forEach(ydir => {
-					if(xdir !== 0 || ydir !== 0){ // self check
-						let xcoord = x + xdir;
-						let ycoord = y + ydir;
-
-						const coord = this.getIndexFromCoords(xcoord, ycoord);
-
-						if(xcoord >= 0 && xcoord < this.width    // x bounds check
-							&& ycoord >= 0 && ycoord < this.height // y bounds check
-							&& !grid[coord].mine                   // mine check
-							) { 
-							grid[coord].neighbors++;
-						}
-					}
-				});
+	_calcNeighboringMines() {
+		this.mineLocations.forEach((coord) => {
+			this.board[coord].surroundingCells(cell => {
+				if(!cell.mine) {
+					cell.neighbors++;
+				}
 			});
 		});
+	}
+}
+
+class Cell {
+	@observable hidden;
+	@observable flag;
+	@observable loser = false;
+	hidden = true;
+	flag = false;
+	neighbors = 0;
+
+	constructor(x, y, mine, game) {
+		this.x = x;
+		this.y = y;
+		this.mine = mine || false;
+		this.game = game;
+	}
+
+	toggleFlag() {
+		if(this.hidden) this.flag = !this.flag;
+	}
+
+	/**
+	 * Action for player clicking a square
+	 * @param {int} x X coordinate
+	 * @param {int} y Y coordinate
+	 */
+	reveal() {		
+		if(this.flag) {
+			return;
+		} else if(this.mine) {
+			this.explode();
+		} else if(this.neighbors === 0) {
+			this.game.exposeEmptyCells(this.x, this.y);
+		}
+		this.hidden = false;
 	}
 
 	/**
 	 * Trigger end of game
 	 */
-	explode(x, y) {
-		this.gameOver = true;
-		this.board.forEach(cell => {
-			cell.hidden = false;
+	explode() {
+		if(this.game.gameOver) return;
+
+		this.loser = true;
+		this.game.endGame();
+	}
+
+	quickReveal() {
+		let count = this.neighbors;
+		let hiddenUnflaggedNeighbors = 0;
+
+		// Test if flagged neighbors is equal to neighboring mine count
+		this.surroundingCells(cell => {
+			if(cell.flag) count--;
+			if(cell.hidden && !cell.flag) hiddenUnflaggedNeighbors++;
 		});
-		console.log('You Lost');
+
+		if(count === 0) {
+			this.surroundingCells(cell => {
+				if(cell.hidden) cell.reveal();
+			});
+		} else if(count === hiddenUnflaggedNeighbors) {
+			this.surroundingCells(cell => {
+				if(cell.hidden) cell.flag = true;
+			});
+		}
+		console.log({count});
 	}
 
-	/**
-	 * Middle click action, game shortcut
-	 */
-	exposeNeighbors(x, y) {
-		// Mark known mines
-		// Expose known non-mine neighbors
-	}
-
-	/**
-	 * Expose group of empty cells when clicking on an empty cell
-	 */
-	exposeEmptyCells(x, y) {
-		const cellsToExpose = new Set();
+	surroundingCells(fn) {
 		const movements = [-1,0,1];
 
 		// Each surrounding cell
 		movements.forEach(xdir => {
 			movements.forEach(ydir => {
 				if(xdir !== 0 || ydir !==0) {
-					let xcoord = x + xdir;
-					let ycoord = y + ydir;
+					let xcoord = this.x + xdir;
+					let ycoord = this.y + ydir;
 
-					const coord = this.getIndexFromCoords(xcoord, ycoord);
+					const coord = this.game.getIndexFromCoords(xcoord, ycoord);
+
 					// If it's a valid board location
-
-					if(xcoord >= 0 && xcoord < this.width    // x bounds check
-						&& ycoord >= 0 && ycoord < this.height // y bounds check
-						&& !this.board[coord].mine             // mine check
+					if(xcoord >= 0 && xcoord < this.game.width    // x bounds check
+						&& ycoord >= 0 && ycoord < this.game.height // y bounds check
 						){
-						// If it's not a mine and has no neighbors
-						if(!this.board[coord].mine && this.board[coord].neighbors === 0) {
-							// Add to set
-							cellsToExpose.add(coord);
-							this.board[coord].hidden = false;
-							// this.exposeEmptyCells(xcoord, ycoord);
-						}
+						fn(this.game.board[coord], coord);
 					}
 				}
-			});
+			})
 		});
 	}
 }

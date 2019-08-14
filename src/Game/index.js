@@ -13,7 +13,7 @@ const GameBoard = styled.div`
 `;
 
 const Game = () => {
-	const [{ game }] = useGame();
+	const game = useGame();
 
 	return (
 		<GameBoard>

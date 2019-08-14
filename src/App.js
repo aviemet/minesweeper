@@ -4,7 +4,7 @@ import Router from './Router';
 import './App.css';
 import styled from 'styled-components';
 import { GameProvider } from './context/GameStore';
-import { RouteProvider } from './context/Routes';
+import { RouteProvider } from './context/RouteStore';
 
 const GameStyles = styled.div`
   width: 100%;

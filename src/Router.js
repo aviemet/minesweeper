@@ -2,11 +2,11 @@ import React from 'react';
 import Game from './Game';
 import Choices from './Choices';
 
-import { useRoutes } from './context/Routes';
+import { useRoutes } from './context/RouteStore';
 import { useGame } from './context/GameStore';
 
 const Router = () => {
-	const [{ game }, gameDispatch] = useGame();
+	const game = useGame();
 	const [{ currentPage }, routerDispatch] = useRoutes();
 
 
@@ -16,17 +16,14 @@ const Router = () => {
 		case '':
 		default:
 
-	gameDispatch({
-		type: 'new',
-		args: {width: 30, height: 16, mines: 40}
-	});
+			game.newGame(30, 17, 90);
 
-	routerDispatch({
-		type: 'navigate',
-		page: 'game'
-	});
+			routerDispatch({
+				type: 'navigate',
+				page: 'game'
+			});
 			return <Choices />
-	}
+		}
 
 };
 

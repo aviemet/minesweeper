@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useGame } from '../context/GameStore';
+import { observer } from 'mobx-react-lite';
 
 const CellContainer = styled.div`
 	width: 25px;
@@ -11,7 +12,8 @@ const CellContainer = styled.div`
 	overflow:hidden;
 
 	&.hidden {
-		background: white;
+		background: rgb(136,147,245);
+		background: linear-gradient(0deg, rgba(136,147,245,1) 0%, rgba(77,133,204,1) 100%);
 	}
 
 	&.mine {
@@ -25,90 +27,113 @@ const CellContainer = styled.div`
 	&.flag {
 		background: yellow;
 	}
-`;
 
-const Cell = ({ x, y, mine, hidden, neighbors }) => {
-	// const [ hidden, setHidden ] = useState(true);
-	const [ loser, setLoser ] = useState(false);
-	
-	const [{ game }, dispatch] = useGame();
-
-	const coord = game.getIndexFromCoords(x, y);
-	const cell = game.board[coord];
-	
-	useEffect(() => {
-		console.log(hidden)
-		// if(game.board[coord].hidden !== hidden) setHidden(game.board[coord].hidden)
-
-		// if(game.gameOver && hidden) setHidden(false)
-	}, [hidden])
-
-	const handleClick = e => {
-		if(!game.gameOver) {
-			e.stopPropagation();
-
-			cell.hidden = false;
-
-			if(mine) {
-				game.explode();
-
-				setLoser(true);
-
-				dispatch({
-					type: 'end'
-				})
-
-			} else {
-				if(neighbors === 0) {
-					console.log('exposing')
-					game.exposeEmptyCells(x, y);
-				}
-			}
-		}
-	};
-
-	const handleRightClick = e => {
-		if(hidden) {
-			// Mark with flag
-		}
+	&.neighbors-one {
+		color: #ADD8E6;
 	}
 
-	// Middle click
-	const handleMouseDown = e => {
-		if(e.button === 1 && !hidden) {
-			// methods.exposeNeighbors(x, y);
+	&.neighbors-two {
+		color: #00AB66;
+	}
+
+	&.neighbors-three {
+		color: #792F2F;
+	}
+
+	&.neighbors-four {
+		color: #113EAC;
+	}
+
+	&.neighbors-five {
+		color: #654321;
+	}
+
+	&.neighbors-six {
+		color: #00FFFF;
+	}
+
+	&.neighbors-seven {
+		color: #111111;
+	}
+
+	&.neighbors-eight {
+		color: #999999;
+	}
+`;
+
+const Cell = observer(({coord, cell}) => {
+	const game = useGame();
+	const { x, y, hidden, flag, mine, neighbors, loser } = cell;
+
+	// Prevent losing click from also resetting the board;
+	const handleClick = e => {
+		if(!game.gameOver) e.stopPropagation();
+	};
+
+	const handleMouseDown = e => game.clicks.add(e.button);
+
+	const handleMouseUp = e => {
+		if(game.clicks.has(0) && game.clicks.has(2)) {
+			game.clicks.clear();
+			cell.quickReveal();
+		} else {
+			if(game.clicks.has(e.button)) {
+		
+				switch(e.button) {
+					case 0: // Left Click
+						cell.reveal();					
+						break;
+					case 1: // Middle Click
+						break;
+					case 2: // Right Click
+						cell.toggleFlag()
+						break;
+					default:
+				}
+
+			}
+			game.clicks.delete(e.button);
 		}
 	}
 
 	const classes = () => {
-		let str = '';
+		const neighborClasses = [null, 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' ];
+
+		let cellClasses = [];
+
 		if(hidden) {
-			str = 'hidden';
+			cellClasses.push('hidden');
+
+			if(flag) cellClasses.push('flag');
+
 		} else {
+
 			if(mine) {
-				str = 'mine';
-				if(loser) {
-					str += ' loser';
-				}
+				cellClasses.push('mine');
+				if(loser) cellClasses.push('loser');
+
 			} else if(neighbors > 0) {
-				str = 'flag';
+				cellClasses.push(`neighbors-${neighborClasses[neighbors]}`);
 			}
+
 		}
-		return str;
+
+		return cellClasses.join(' ');
 	};
 
 
-	return (
-		<CellContainer
-			onClick={handleClick}
-			onContextMenu={handleRightClick}
-			onMouseDown={handleMouseDown}
-			className={classes()}
-		>
-			{!hidden && !mine && neighbors > 0 && neighbors}
-			{/* {game.getIndexFromCoords(x,y)} */}
-		</CellContainer>
-	);
-};
+return (
+	<CellContainer
+		onClick={handleClick}
+		onMouseDown={handleMouseDown}
+		onMouseUp={handleMouseUp}
+		className={classes()}
+	>
+		{!hidden && !mine && neighbors > 0 && neighbors}
+		{/* {game.getIndexFromCoords(x,y)} */}
+	</CellContainer>
+);
+	
+});
 
 export default Cell;

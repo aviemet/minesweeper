@@ -3,9 +3,10 @@ import { observable } from "mobx";
 class MinesweeperGame {
 	width = 0;
 	height = 0;
-	mines = 0;
 	mineLocations = new Map();
-
+	
+	@observable mines = 0;
+	@observable flags = 0;
 	@observable clicks = new Set();
 	@observable board = [];
 	@observable gameOver = false;
@@ -131,7 +132,15 @@ class Cell {
 	}
 
 	toggleFlag() {
-		if(this.hidden) this.flag = !this.flag;
+		if(this.hidden) {
+			this.flag = !this.flag;
+		}
+
+		if(this.flag) {
+			this.game.flags++;
+		} else {
+			this.game.flags--;
+		}
 	}
 
 	/**

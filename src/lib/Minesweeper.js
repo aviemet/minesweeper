@@ -114,6 +114,7 @@ class MinesweeperGame {
 			});
 		});
 	}
+
 }
 
 class Cell {

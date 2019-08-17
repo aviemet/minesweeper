@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useGame } from '../context/GameStore';
+import useInterval from '../lib/useInterval';
 import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 
@@ -8,22 +9,25 @@ const TimerContainer = styled.div`
 `;
 
 const Timer = observer(() => {
-	const seconds = useRef(0);
-	const interval = useRef(setInterval(() => {
-		seconds.current = seconds.current + 1;
-	}));
+	const [ seconds, setSeconds ] = useState(0);
+	const [ isCounting, setIsCounting ] = useState(true);
 
 	const game = useGame();
 
+	useInterval(() => {
+		setSeconds(seconds + 1);
+		console.log({seconds});
+	}, isCounting ? 1000 : null);
+
 	useEffect(() => {
-		if(game.gameOver === true) {
-			clearInterval(interval.current);
+		if(game.gameOver) {
+			setIsCounting(false);
 		}
-	}, []);
+	}, [game.gameOver]);
 
 	return (
 		<TimerContainer>
-			<span>{seconds.current}</span>
+			<div>{seconds}</div>
 		</TimerContainer>
 	)
 });

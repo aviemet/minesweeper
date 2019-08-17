@@ -25,7 +25,6 @@ const GameBoard = styled.div`
 const Board = () => {
 
 	const game = useGame();
-	console.log({game})
 	const [{ currentPage }, routerDispatch] = useRoutes();
 
 	const resetIfGameOver = () => {

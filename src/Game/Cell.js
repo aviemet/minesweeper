@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 const CellContainer = styled.div`
 	width: 25px;
 	height: 25px;
-	border: 2px solid #666;
+	border: 1px solid #666;
 	display: inline-block;
 	background: #444;
 	overflow:hidden;
@@ -70,6 +70,9 @@ const Cell = observer(({coord, cell}) => {
 		if(!game.gameOver) e.stopPropagation();
 	};
 
+	// Delegate click handling to Game object to allow moving mouse during mousedown
+	// to different cell. Allows any cell to handle the mouseup event while also 
+	// detecting the left+right click action
 	const handleMouseDown = e => game.clicks.add(e.button);
 
 	const handleMouseUp = e => {

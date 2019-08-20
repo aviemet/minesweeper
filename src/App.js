@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { GameProvider } from './context/GameStore';
 import { RouteProvider } from './context/RouteStore';
 
-const GameStyles = styled.div`
+const AppStyle = styled.div`
   width: 100%;
   height: 100%;
   background: #222;
@@ -18,9 +18,9 @@ function App() {
   return (
     <GameProvider>
       <RouteProvider>
-        <GameStyles>
+        <AppStyle>
           <Router />
-        </GameStyles>
+        </AppStyle>
       </RouteProvider>
     </GameProvider>
   );

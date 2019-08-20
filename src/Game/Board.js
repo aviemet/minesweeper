@@ -8,11 +8,13 @@ import { useRoutes } from '../context/RouteStore';
 
 const Row = styled.div`
 	display: block;
+	height: 27px;
 `;
 
 const GameBoard = styled.div`
-	border: 1px solid white;
+	border: 1px solid #666;
 
+	/* Disable text highlighting */
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
      -khtml-user-select: none; /* Konqueror HTML */

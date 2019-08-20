@@ -16,7 +16,7 @@ const Router = () => {
 		case '':
 		default:
 
-			game.newGame(30, 17, 90);
+			game.newGame(8, 8, 10);
 
 			routerDispatch({
 				type: 'navigate',

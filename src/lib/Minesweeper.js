@@ -1,14 +1,15 @@
-import { observable } from "mobx";
+import { observable, action } from "mobx";
 
 class MinesweeperGame {
 	width = 0;
 	height = 0;
-	mineLocations = new Map();
+	mineLocations = new Set();
 	
 	@observable mines = 0;
 	@observable flags = 0;
 	@observable clicks = new Set();
 	@observable board = [];
+	@observable revealedCells = 0;
 	@observable gameOver = false;
 
 	getCoordsFromIndex(index) {
@@ -28,12 +29,14 @@ class MinesweeperGame {
 	 * @param {int} height Height of game board
 	 * @param {int} mines Number of mines
 	 */
+	@action
 	newGame(width, height, mines) {
 		// TODO: bounds check for mines
 		this.gameOver = false;
 		this.width = width;
 		this.height = height;
 		this.mines = mines;
+		this.revealedCells = 0;
 		this._buildBoard(width, height, mines);
 	}
 
@@ -46,7 +49,7 @@ class MinesweeperGame {
 		const initialCoord = this.getIndexFromCoords(x, y);
 
 		this.board[initialCoord].surroundingCells((cell, coord) => {
-			cell.hidden = false;
+			cell.reveal();
 
 			// Recurse if it has neighboring mine count of 0 and hasn't been touched yet
 			if(cell.neighbors === 0 && !set.has(coord)) {
@@ -82,8 +85,6 @@ class MinesweeperGame {
 				this.board.push(new Cell( x, y, this.mineLocations.has(coord), this ));
 			}
 		}
-		
-		this._calcNeighboringMines();
 	}
 	
 	/**
@@ -101,18 +102,28 @@ class MinesweeperGame {
 		}
 		return mineLocations;
 	}
+
+	addExtraMines(ignoredIndices) {
+		let randomx, randomy = 0;
 	
-	/**
-	 * Pre calculate the neighboring mine count for each cell
-	 */
-	_calcNeighboringMines() {
-		this.mineLocations.forEach((coord) => {
-			this.board[coord].surroundingCells(cell => {
-				if(!cell.mine) {
-					cell.neighbors++;
-				}
-			});
-		});
+		while(this.mineLocations.size < this.mines) {
+			randomx = Math.floor(Math.random() * this.width);
+			randomy = Math.floor(Math.random() * this.height);
+			const coord = this.getIndexFromCoords(randomx, randomy);
+
+			if(!ignoredIndices.has(coord)) {
+				this.mineLocations.add(coord);
+				this.board[coord].mine = true;
+			}
+			
+		}
+	}
+
+	checkForVictory() {
+		console.log({boardSize: this.board.length, revealedCells: this.revealedCells})
+		if(this.board.length - this.revealedCells === this.mines) {
+			console.log('victory')
+		}
 	}
 
 }
@@ -121,17 +132,19 @@ class Cell {
 	@observable hidden;
 	@observable flag;
 	@observable loser = false;
-	hidden = true;
-	flag = false;
-	neighbors = 0;
+	@observable mine = false;
+	@observable hidden = true;
+	@observable flag = false;
+	@observable neighbors = 0;
 
 	constructor(x, y, mine, game) {
 		this.x = x;
 		this.y = y;
-		this.mine = mine || false;
+		this.mine = mine;
 		this.game = game;
 	}
 
+	@action
 	toggleFlag() {
 		if(this.hidden) {
 			this.flag = !this.flag;
@@ -149,20 +162,65 @@ class Cell {
 	 * @param {int} x X coordinate
 	 * @param {int} y Y coordinate
 	 */
-	reveal() {		
-		if(this.flag) {
-			return;
-		} else if(this.mine) {
+	@action
+	reveal() {
+		// If first click is on a mine, rearrange the mines to provide a decent game
+		if(this.game.revealedCells === 0 && this.mine) this._ensureGameCanStart();
+
+		if(this.flag || !this.hidden) return;
+		
+		if(this.mine) {
 			this.explode();
-		} else if(this.neighbors === 0) {
-			this.game.exposeEmptyCells(this.x, this.y);
+		} else {
+			// Count neighboring mines
+			this.neighbors = 0;
+			this.surroundingCells((cell, coord) => {
+				if(cell.mine) this.neighbors++;
+			});
+
+			this.hidden = false;
+			this.game.revealedCells++;
+
+			// Cascade reveal empty cells
+			if(this.neighbors === 0) {
+				
+				this.surroundingCells((cell, coord) => {
+					if(cell.hidden) {
+						cell.reveal();
+					}
+				});
+			}
 		}
-		this.hidden = false;
+
+		this.game.checkForVictory();
 	}
+
+	@action
+	_ensureGameCanStart() {
+		let removedMines = new Set();
+			
+		const index = this.game.getIndexFromCoords(this.x, this.y);
+		this.mine = false;
+		this.game.mineLocations.delete(index);
+
+		removedMines.add(index)
+
+		this.surroundingCells((cell, coord) => {
+			if(cell.mine) {
+				cell.mine = false;
+				this.game.mineLocations.delete(coord);
+				removedMines.add(coord);
+			}
+		});
+
+		this.game.addExtraMines(removedMines);
+	}
+
 
 	/**
 	 * Trigger end of game
 	 */
+	@action
 	explode() {
 		if(this.game.gameOver) return;
 
@@ -170,6 +228,7 @@ class Cell {
 		this.game.endGame();
 	}
 
+	@action
 	quickReveal() {
 		let count = this.neighbors;
 		let hiddenUnflaggedNeighbors = 0;
@@ -189,7 +248,6 @@ class Cell {
 				if(cell.hidden) cell.flag = true;
 			});
 		}
-		console.log({count});
 	}
 
 	surroundingCells(fn) {

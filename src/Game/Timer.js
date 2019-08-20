@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameStore';
 import useInterval from '../lib/useInterval';
 import { observer } from 'mobx-react-lite';
@@ -16,7 +16,6 @@ const Timer = observer(() => {
 
 	useInterval(() => {
 		setSeconds(seconds + 1);
-		console.log({seconds});
 	}, isCounting ? 1000 : null);
 
 	useEffect(() => {

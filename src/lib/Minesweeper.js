@@ -10,6 +10,7 @@ class MinesweeperGame {
 	@observable clicks = new Set();
 	@observable board = [];
 	@observable revealedCells = 0;
+	@observable gameStarted = false;
 	@observable gameOver = false;
 
 	getCoordsFromIndex(index) {
@@ -27,7 +28,8 @@ class MinesweeperGame {
 	 * Start a new game
 	 * @param {int} width Width of game board
 	 * @param {int} height Height of game board
-	 * @param {int} mines Number of mines
+	 * @param {int} mines Number of minesKrishna3.141
+	 * 
 	 */
 	@action
 	newGame(width, height, mines) {
@@ -36,6 +38,7 @@ class MinesweeperGame {
 		this.width = width;
 		this.height = height;
 		this.mines = mines;
+		this.flags = 0;
 		this.revealedCells = 0;
 		this._buildBoard(width, height, mines);
 	}
@@ -120,10 +123,11 @@ class MinesweeperGame {
 	}
 
 	checkForVictory() {
-		console.log({boardSize: this.board.length, revealedCells: this.revealedCells})
 		if(this.board.length - this.revealedCells === this.mines) {
-			console.log('victory')
+			this.endGame();
+			return true;
 		}
+		return false;
 	}
 
 }
@@ -164,20 +168,23 @@ class Cell {
 	 */
 	@action
 	reveal() {
-		// If first click is on a mine, rearrange the mines to provide a decent game
-		if(this.game.revealedCells === 0 && this.mine) this._ensureGameCanStart();
+		// Actions for first click of the game
+		if(this.game.revealedCells === 0) {
+			this.game.gameStarted = true;
 
+			// If first clicked cell is a mine, rearrange mines
+			if(this.mine) this._ensureGameCanStart();
+		}
+
+		// Do nothing if clicking on a flag or a revealed cell
 		if(this.flag || !this.hidden) return;
 		
+		// Clicking a mine ends the game
 		if(this.mine) {
 			this.explode();
 		} else {
 			// Count neighboring mines
-			this.neighbors = 0;
-			this.surroundingCells((cell, coord) => {
-				if(cell.mine) this.neighbors++;
-			});
-
+			this.neighbors = this._countNeighboringMines();
 			this.hidden = false;
 			this.game.revealedCells++;
 
@@ -191,10 +198,12 @@ class Cell {
 				});
 			}
 		}
-
-		this.game.checkForVictory();
 	}
 
+	/**
+	 * Changes this and surrounding cells from mines to empty
+	 * Used to ensure that the first click results in a playable game
+	 */
 	@action
 	_ensureGameCanStart() {
 		let removedMines = new Set();
@@ -216,6 +225,16 @@ class Cell {
 		this.game.addExtraMines(removedMines);
 	}
 
+	/**
+	 * Return the neighboring mine count
+	 */
+	_countNeighboringMines() {
+		let mineCount = 0;
+		this.surroundingCells((cell, coord) => {
+			if(cell.mine) mineCount++;
+		});
+		return mineCount;
+	}
 
 	/**
 	 * Trigger end of game
@@ -239,13 +258,17 @@ class Cell {
 			if(cell.hidden && !cell.flag) hiddenUnflaggedNeighbors++;
 		});
 
+		// If the neighboring mines count and the flags count is the same,
+		// Reveal the surrounding unflagged cells
 		if(count === 0) {
 			this.surroundingCells(cell => {
 				if(cell.hidden) cell.reveal();
 			});
+		// If the neighboring mines count is the same as hidden neighbors
+		// Flag the neighboring cells
 		} else if(count === hiddenUnflaggedNeighbors) {
 			this.surroundingCells(cell => {
-				if(cell.hidden) cell.flag = true;
+				if(cell.hidden && !cell.flag) cell.toggleFlag();
 			});
 		}
 	}

@@ -4,28 +4,34 @@ import { useGame } from '../context/GameStore';
 import { observer } from 'mobx-react-lite';
 
 const CellContainer = styled.div`
-	width: 25px;
-	height: 25px;
+	width: ${({ theme }) => theme.cell.height };
+	height: ${({ theme }) => theme.cell.height };
 	border: 1px solid #666;
 	display: inline-block;
 	background: #444;
 	overflow:hidden;
 
+	background-position: center;
+	background-size: 60%;
+	background-repeat: no-repeat;
+
 	&.hidden {
-		background: rgb(136,147,245);
-		background: linear-gradient(0deg, rgba(136,147,245,1) 0%, rgba(77,133,204,1) 100%);
+		background-color: rgb(136,147,245);
 	}
 
 	&.mine {
-		background: red;
+		background-color: red;
+
+		background-image:url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="${({ theme }) => theme.icons.bomb.icon[0]}" height="${({ theme }) => theme.icons.bomb.icon[1]}" viewBox="0 0 ${({ theme }) => theme.icons.bomb.icon[0]} ${({ theme }) => theme.icons.bomb.icon[1]}"><path d="${({ theme }) => theme.icons.bomb.icon[4]}" ></path></svg>');
 
 		&.loser {
-			background: orange;
+			background-color: orange;
 		}
 	}
 
 	&.flag {
-		background: yellow;
+		background-color: yellow;
+		background-image:url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="${({ theme }) => theme.icons.flag.icon[0]}" height="${({ theme }) => theme.icons.flag.icon[1]}" viewBox="0 0 ${({ theme }) => theme.icons.flag.icon[0]} ${({ theme }) => theme.icons.flag.icon[1]}"><path d="${({ theme }) => theme.icons.flag.icon[4]}" ></path></svg>');
 	}
 
 	&.neighbors-one {
@@ -76,6 +82,7 @@ const Cell = observer(({coord, cell}) => {
 	const handleMouseDown = e => game.clicks.add(e.button);
 
 	const handleMouseUp = e => {
+		// If right and left button pressed, use quick reveal
 		if(game.clicks.has(0) && game.clicks.has(2)) {
 			game.clicks.clear();
 			cell.quickReveal();
@@ -96,6 +103,11 @@ const Cell = observer(({coord, cell}) => {
 
 			}
 			game.clicks.delete(e.button);
+		}
+
+		if(game.checkForVictory()) {
+			e.stopPropagation();
+			console.log('Victory!')
 		}
 	}
 

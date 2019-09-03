@@ -10,6 +10,7 @@ const DifficultyButton = styled.div`
 	background: white;
 	font-size: 3rem;
 	margin: 5px;
+	display: inline-block;
 `;
 
 const DifficultyChoice = props => {

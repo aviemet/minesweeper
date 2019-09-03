@@ -13,6 +13,8 @@ const DisplayContainer = styled.div`
 const Display = observer(() => {
 	const game = useGame();
 
+	console.log({ mines: game.mines, flags: game.flags });
+
 	return (
 		<DisplayContainer>
 			<span>{game.mines - game.flags}</span>

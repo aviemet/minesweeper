@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { useGame } from './GameStore';
 
 export const RouteContext = createContext();
 
 export const RouteProvider = ({children }) => {
+	const game = useGame();
+
 	const initialState = {
-		currentPage: ''
+		currentPage: '',
+		difficulty: game.difficulty.EASY
 	};
 
 	const reducer = (state, action) => {
@@ -12,7 +16,8 @@ export const RouteProvider = ({children }) => {
 			case 'navigate':
 				return {
 					...state,
-					currentPage: action.page
+					currentPage: action.page,
+					difficulty: action.difficulty
 				}
 			default:
 				return state;

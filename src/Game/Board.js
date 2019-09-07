@@ -9,6 +9,14 @@ import { useRoutes } from '../context/RouteStore';
 const Row = styled.div`
 	display: block;
 	height: 27px;
+
+	&.even .cell:nth-child(even) {
+		filter: brightness(92%);
+	}
+	
+	&.odd .cell:nth-child(odd) {
+		filter: brightness(92%);
+	}
 `;
 
 const GameBoard = styled.div`
@@ -27,14 +35,15 @@ const GameBoard = styled.div`
 const Board = () => {
 
 	const game = useGame();
-	const [{ currentPage }, routerDispatch] = useRoutes();
+	const [{ difficulty }, routerDispatch] = useRoutes();
 
 	const resetIfGameOver = () => {
 		if(game.gameOver) {
 			routerDispatch({
 				type: 'navigate',
-				page: ''
-			})
+				page: '',
+				difficulty
+			});
 		}
 	}
 
@@ -50,7 +59,7 @@ const Board = () => {
 		>{
 			[...Array(game.height)].map((_, y) => {
 				return(
-					<Row key={y}>{
+					<Row key={y} className={ y % 2 === 0 ? 'odd' : 'even' }>{
 						[...Array(game.width)].map((_, x) => {
 							const coord = game.getIndexFromCoords(x, y);
 							const cell = game.board[coord];

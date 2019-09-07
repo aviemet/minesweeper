@@ -17,14 +17,12 @@ const DifficultyChoice = props => {
 	const game = useGame();
 	const [{ currentPage }, routerDispatch] = useRoutes();
 
-	const { width, height, mines } = props.dimensions;
-
 	const startGame = () => {
-		game.newGame(width, height, mines);
+		game.newGame(props.dimensions);
 
 		routerDispatch({
 			type: 'navigate',
-			page: 'game'
+			page: ''
 		});
 	};
 

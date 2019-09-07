@@ -1,23 +1,24 @@
 import React from 'react';
 
+import { useGame } from './context/GameStore';
 import Game from './Game';
-import Choices from './Choices';
 import Settings from './Settings';
 
 import { useRoutes } from './context/RouteStore';
 
 const Router = () => {
-	const [{ currentPage }, routerDispatch] = useRoutes();
+	const [{ currentPage, difficulty }] = useRoutes();
 
+	const game = useGame();
 
 	switch (currentPage) {
-		case 'game':
-			return <Game />
 		case 'settings':
 			return <Settings />
 		case '':
 		default:
-			return <Choices />
+			console.log({difficulty});
+			game.newGame(difficulty);
+			return <Game />
 		}
 
 };

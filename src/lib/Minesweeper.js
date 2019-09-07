@@ -4,6 +4,12 @@ class MinesweeperGame {
 	width = 0;
 	height = 0;
 	mineLocations = new Set();
+
+	difficulty = {
+		EASY: { width: 8, height: 8, mines: 10 },
+		MEDIUM: { width: 15, height: 13, mines: 40 },
+		HARD: { width: 30, height: 16, mines: 99 }
+	};
 	
 	@observable mines = 0;
 	@observable flags = 0;
@@ -12,6 +18,7 @@ class MinesweeperGame {
 	@observable revealedCells = 0;
 	@observable gameStarted = false;
 	@observable gameOver = false;
+	@observable winner = false;
 
 	getCoordsFromIndex(index) {
 		const x = index % this.width;
@@ -32,9 +39,11 @@ class MinesweeperGame {
 	 * 
 	 */
 	@action
-	newGame(width, height, mines) {
+	newGame({ width, height, mines }) {
 		// TODO: bounds check for mines
 		this.gameOver = false;
+		this.gameStarted = false;
+		this.winner = false;
 		this.width = width;
 		this.height = height;
 		this.mines = mines;
@@ -124,6 +133,7 @@ class MinesweeperGame {
 
 	checkForVictory() {
 		if(this.board.length - this.revealedCells === this.mines) {
+			this.winner = true;
 			this.endGame();
 			return true;
 		}
@@ -150,6 +160,8 @@ class Cell {
 
 	@action
 	toggleFlag() {
+		if(this.game.gameOver) return;
+		
 		if(this.hidden) {
 			this.flag = !this.flag;
 		}

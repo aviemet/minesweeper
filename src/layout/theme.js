@@ -4,9 +4,6 @@ import { faBomb, faFlag, faCogs, faSmile } from '@fortawesome/free-solid-svg-ico
 library.add(faBomb, faFlag, faCogs, faSmile);
 
 export default {
-	navbar: {
-		height: '50px'
-	},
 	cell: {
 		height: '25px',
 		bgColorRevealed: '#333333',

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const GameContainer = styled.div`
 	margin: 0 auto;
-	top: 50%;
+	top: 40%;
 	position: relative;
 	transform: translateY(-50%);
 `;

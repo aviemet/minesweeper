@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameStore';
 import useInterval from '../lib/useInterval';
 import { observer } from 'mobx-react-lite';
-import styled from 'styled-components';
 
-const TimerContainer = styled.div`
-	background: #111;
-	color: green;
-	font-family: 'Share Tech Mono', monospace;
+import styled from 'styled-components';
+import CounterContainer from '../components/CounterContainer';
+
+const TimerContainer = styled(CounterContainer)`
 	width: 29px;
-	text-align: right;
-	padding: 3px;
-	border-radius: 3px;
 `;
 
 const Timer = observer(() => {

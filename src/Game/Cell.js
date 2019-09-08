@@ -145,7 +145,6 @@ const Cell = observer(({ cell }) => {
 			} else if(neighbors > 0) {
 				cellClasses.push(`neighbors-${neighborClasses[neighbors]}`);
 			}
-
 		}
 
 		return cellClasses.join(' ');

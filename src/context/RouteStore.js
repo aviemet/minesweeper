@@ -8,10 +8,13 @@ export const RouteProvider = ({children }) => {
 
 	const initialState = {
 		currentPage: '',
-		difficulty: game.difficulty.EASY
+		difficulty: JSON.parse(localStorage.getItem('difficulty')) || game.difficulty.EASY
 	};
 
 	const reducer = (state, action) => {
+		if(action.difficulty) {
+			localStorage.setItem('difficulty', JSON.stringify(action.difficulty));
+		}
 		switch (action.type) {
 			case 'navigate':
 				return {

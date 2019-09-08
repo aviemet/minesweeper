@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 
 import Timer from './Timer';
@@ -66,9 +66,17 @@ const TimerContainer = styled.div`
 	display: inline-block;
 `;
 
+const ICONS = {
+	NORMAL: 'smile',
+	CLICKED: 'surprise',
+	WON: 'grin-stars',
+	LOST: 'sad-tear'
+};
+
 const Display = observer(() => {
 	const game = useGame();
 	const [{ difficulty }, routerDispatch] = useRoutes();
+	const [ faceIcon, setFaceIcon ] = useState(ICONS.NORMAL);
 
 	const resetGame = () => {
 		routerDispatch({
@@ -82,6 +90,18 @@ const Display = observer(() => {
 		return num.toString().padStart(3, '0');
 	};
 
+	useEffect(() => {
+		let face = ICONS.NORMAL;
+
+		if(game.gameOver) {
+			face = game.winner ? ICONS.WON : ICONS.LOST;
+		} else if(game.clicks.size > 0) {
+			face = ICONS.CLICKED;
+		}
+
+		setFaceIcon(face);
+	}, [game.clicks.size, game.gameOver]);
+
 	return (
 		<DisplayContainer>
 
@@ -94,7 +114,7 @@ const Display = observer(() => {
 
 			<SmileyContainer>
 				<button onClick={ resetGame }>
-					<Icon icon='smile' />
+					<Icon icon={faceIcon} />
 				</button>
 			</SmileyContainer>
 

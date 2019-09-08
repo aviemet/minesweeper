@@ -76,11 +76,24 @@ class MinesweeperGame {
 		setTimeout(() => {
 			this.gameOver = true;
 
-			// Reveal Mines
+			const animate = !this.winner;
+			this._revealMines(animate);
+		}, 1);
+	}
+
+	_revealMines(animate) {
+		if(animate === true) {
+			this.mineLocations.forEach(coord => {
+				let timeout = Math.floor(Math.random() * 1000);
+				setTimeout(() => {
+					this.board[coord].hidden = false;
+				}, timeout);
+			});
+		} else {
 			this.mineLocations.forEach(coord => {
 				this.board[coord].hidden = false;
 			});
-		}, 1);
+		}
 	}
 
 	/**

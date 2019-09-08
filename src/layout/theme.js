@@ -30,7 +30,7 @@ export default {
 		}
 	},
 	cell: {
-		height: 25,
+		height: 30,
 		bgColorRevealed: '#333333',
 		bgColorHidden: '#dedacc',
 		bgColorHover: '#b5b3ae',

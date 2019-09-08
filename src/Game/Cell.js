@@ -40,6 +40,7 @@ const CellContainer = styled.div`
 
 		&.flag {
 			color: #222222;
+			background-color: #c2f7da;
 		}
 	}
 
@@ -160,8 +161,8 @@ const Cell = observer(({ cell }) => {
 		>
 			<span>
 				{!hidden && !mine && neighbors > 0 && neighbors}
-				{hidden && flag && <Icon icon='flag' />}
-				{!hidden && mine && game.gameOver && <Icon icon='bomb' />}
+				{( (hidden && flag) || (!hidden && flag && mine) ) && <Icon icon='flag' />}
+				{!hidden && mine && !flag && game.gameOver && <Icon icon='bomb' />}
 			</span>
 		</CellContainer>
 	);

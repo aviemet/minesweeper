@@ -21,9 +21,9 @@ const SmileyContainer = styled.div`
 	display: inline-block;
 	
 	button {
-		width: 30px;
-		height: 30px;
-		margin: 4px 0 0 0;
+		width: 31px;
+		height: 31px;
+		margin: 3px 0 0 0;
 		padding: 1px 0 0 0;
 		border-radius: 50%;
 		border: solid 1px #999999;
@@ -39,7 +39,7 @@ const SmileyContainer = styled.div`
 		transition: background 250ms ease-in-out, transform 150ms ease;
 		appearance: none;
 		outline: none;
-		
+
 		&:hover {
 			background: #444444;
 		}

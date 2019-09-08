@@ -8,7 +8,7 @@ import { useRoutes } from '../context/RouteStore';
 
 const Row = styled.div`
 	display: block;
-	height: 27px;
+	height: ${ ({ theme }) => theme.cell.height + (theme.cell.border.size * 2) }px;
 
 	&.even .cell:nth-child(even) {
 		filter: brightness(92%);
@@ -20,7 +20,7 @@ const Row = styled.div`
 `;
 
 const GameBoard = styled.div`
-	border: 1px solid #666;
+	border: 1px solid ${ ({ theme }) => theme.board.border.color };
 
 	/* Disable text highlighting */
 	-webkit-touch-callout: none; /* iOS Safari */
@@ -59,7 +59,7 @@ const Board = () => {
 		>{
 			[...Array(game.height)].map((_, y) => {
 				return(
-					<Row key={y} className={ y % 2 === 0 ? 'odd' : 'even' }>{
+					<Row key={y} className={ y % 2 === 0 ? 'even' : 'odd' }>{
 						[...Array(game.width)].map((_, x) => {
 							const coord = game.getIndexFromCoords(x, y);
 							const cell = game.board[coord];

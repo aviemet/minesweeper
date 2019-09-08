@@ -5,9 +5,9 @@ import { useGame } from '../context/GameStore';
 import { observer } from 'mobx-react-lite';
 
 const CellContainer = styled.div`
-	width: ${ ({ theme }) => theme.cell.height };
-	height: ${ ({ theme }) => theme.cell.height };
-	border: 1px solid ${ ({ theme }) => theme.cell.borderColor };
+	width: ${ ({ theme }) => theme.cell.height }px;
+	height: ${ ({ theme }) => theme.cell.height }px;
+	border: ${ ({ theme }) => theme.cell.border.size }px solid ${ ({ theme }) => theme.cell.border.color };
 	display: inline-block;
 	overflow:hidden;
 	position: relative;

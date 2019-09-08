@@ -6,7 +6,8 @@ library.add(faBomb, faFlag, faCogs, faSmile);
 export default {
 	board: {
 		background: 'rgba(255,255,255,0.75)',
-		shadow: '0 0 10px #666'
+		shadow: '0 0 10px #666',
+		border: '#666666'
 	},
 	display: {
 		background: '#999',
@@ -29,11 +30,14 @@ export default {
 		}
 	},
 	cell: {
-		height: '25px',
+		height: 25,
 		bgColorRevealed: '#333333',
 		bgColorHidden: '#dedacc',
 		bgColorHover: '#b5b3ae',
-		borderColor: '#666666',
+		border: {
+			color: '#666666',
+			size: 1
+		},
 		neighbors: {
 			one: '#1976D2',
 			two: '#419141',

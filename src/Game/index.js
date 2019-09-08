@@ -18,8 +18,8 @@ const GameBoard = styled.div`
 	display: inline-block;
 	padding: 10px;
 	border-radius: 10px;
-	box-shadow: 0 0 10px #666;
-	background: rgba(255,255,255,0.75);
+	box-shadow: ${ ({theme}) => theme.board.shadow };
+	background: ${ ({theme}) => theme.board.background };
 `;
 
 const Game = () => {

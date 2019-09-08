@@ -5,9 +5,9 @@ import { useGame } from '../context/GameStore';
 import { observer } from 'mobx-react-lite';
 
 const CellContainer = styled.div`
-	width: ${({ theme }) => theme.cell.height };
-	height: ${({ theme }) => theme.cell.height };
-	border: 1px solid #666;
+	width: ${ ({ theme }) => theme.cell.height };
+	height: ${ ({ theme }) => theme.cell.height };
+	border: 1px solid ${ ({ theme }) => theme.cell.borderColor };
 	display: inline-block;
 	overflow:hidden;
 	position: relative;
@@ -15,32 +15,32 @@ const CellContainer = styled.div`
 	background-position: center;
 	background-size: 60%;
 	background-repeat: no-repeat;
-	background-color: ${({ theme }) => theme.cell.bgColorRevealed };
+	background-color: ${ ({ theme }) => theme.cell.bgColorRevealed };
 
 	&.hidden {
-		background-color: ${({ theme }) => theme.cell.bgColorHidden };
+		background-color: ${ ({ theme }) => theme.cell.bgColorHidden };
 
 		&:hover {
-			background-color: ${({ theme }) => theme.cell.bgColorHover };
+			background-color: ${ ({ theme }) => theme.cell.bgColorHover };
 		}
 	}
 
 	&.flag {
-		color: ${({ theme }) => theme.flag.color };
+		color: ${ ({ theme }) => theme.flag.color };
 	}
 
 	&.mine {
-		color: #580f0f;
-		background-color: #ea8239;
+		color: ${ ({ theme }) => theme.mine.color };
+		background-color: ${ ({ theme }) => theme.mine.background };
 
 		&.loser {
-			background-color: #dc3636;
-			color: #ea8239;
+			color: ${ ({ theme }) => theme.mine.exploded.color };
+			background-color: ${ ({ theme }) => theme.mine.exploded.background };
 		}
 
 		&.flag {
-			color: #222222;
-			background-color: #c2f7da;
+			color: ${ ({ theme }) => theme.flag.correct.color };
+			background-color: ${ ({ theme }) => theme.flag.correct.background };
 		}
 	}
 
@@ -53,35 +53,35 @@ const CellContainer = styled.div`
 	}
 
 	&.neighbors-one {
-		color: #1976d2;
+		color: ${ ({ theme }) => theme.cell.neighbors.one };
 	}
 
 	&.neighbors-two {
-		color: #419141;
+		color: ${ ({ theme }) => theme.cell.neighbors.two };
 	}
 
 	&.neighbors-three {
-		color: #419141;
+		color: ${ ({ theme }) => theme.cell.neighbors.three };
 	}
 
 	&.neighbors-four {
-		color: #419141;
+		color: ${ ({ theme }) => theme.cell.neighbors.four };
 	}
 
 	&.neighbors-five {
-		color: #ff8f00;
+		color: ${ ({ theme }) => theme.cell.neighbors.five };
 	}
 
 	&.neighbors-six {
-		color: #419141;
+		color: ${ ({ theme }) => theme.cell.neighbors.six };
 	}
 
 	&.neighbors-seven {
-		color: #111111;
+		color: ${ ({ theme }) => theme.cell.neighbors.seven };
 	}
 
 	&.neighbors-eight {
-		color: #999999;
+		color: ${ ({ theme }) => theme.cell.neighbors.eight };
 	}
 `;
 

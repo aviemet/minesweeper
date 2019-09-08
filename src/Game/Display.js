@@ -11,8 +11,8 @@ import styled from 'styled-components';
 import CounterContainer from '../components/CounterContainer';
 
 const DisplayContainer = styled.div`
-	background: #999;
-	height: 35px;
+	background: ${({ theme }) => theme.display.background };
+	height: ${({ theme }) => theme.display.height }px;
 	position: relative;
 	border-radius: 5px 5px 0 0;
 `;
@@ -21,18 +21,17 @@ const SmileyContainer = styled.div`
 	display: inline-block;
 	
 	button {
-		width: 31px;
-		height: 31px;
+		width: ${({ theme }) => theme.display.smiley.size }px;
+		height: ${({ theme }) => theme.display.smiley.size }px;
 		margin: 3px 0 0 0;
 		padding: 1px 0 0 0;
 		border-radius: 50%;
-		border: solid 1px #999999;
+		border: solid 1px ${({ theme }) => theme.display.smiley.borderColor };
+		background: ${({ theme }) => theme.display.smiley.background };
+		color: ${({ theme }) => theme.display.smiley.color };
 		display: inline-block;
 		text-decoration: none;
-		background: #222222;
-		color: #e0c632;
-		font-family: sans-serif;
-		font-size: 1.3rem;
+		font-size: ${({ theme }) => parseInt(theme.display.smiley.size * 0.75) }px;
 		line-height: 1;
 		cursor: pointer;
 		text-align: center;
@@ -41,7 +40,7 @@ const SmileyContainer = styled.div`
 		outline: none;
 
 		&:hover {
-			background: #444444;
+			background: ${({ theme }) => theme.display.smiley.backgroundHover };
 		}
 	}
 `;

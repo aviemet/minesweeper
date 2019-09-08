@@ -15,21 +15,21 @@ const Button = styled.button`
 	margin: 5px;
 	padding: 3px 8px;
 	border-radius: 3px;
-	border: solid 1px #999999;
-	display: inline-block;
-	text-decoration: none;
-	background: #CCCCCC;
-	color: #111111;
+	border: solid 1px ${({ theme }) => theme.options.button.borderColor };
+	background: ${({ theme }) => theme.options.button.background };
+	color: ${({ theme }) => theme.options.button.color };
 	font-family: sans-serif;
 	font-size: 1rem;
 	line-height: 1;
+	text-decoration: none;
 	cursor: pointer;
 	text-align: center;
 	transition: background 250ms ease-in-out, transform 150ms ease;
 	appearance: none;
+	display: inline-block;
 
 	&:hover {
-		background: #AAAAAA;
+		background:  ${({ theme }) => theme.options.button.backgroundHover };
 	}
 
 `;

@@ -3,6 +3,21 @@ import { faBomb, faFlag, faCogs, faSmile, faSurprise, faGrinStars, faSadTear } f
 
 library.add( faBomb, faFlag, faCogs, faSmile, faSurprise, faGrinStars, faSadTear );
 
+// Non-gray colors
+const COLORS = {
+	durianYellow: '#E1BD27',
+	bone: '#E3DAC9',
+	ecru: '#C2B280',
+	cyan: '#1976D2',
+	mint: '#419141',
+	texasGreen:  '#059033',
+	amarinthRed: '#D3212D',
+	darkMagenta: '#7B1FA2',
+	darkOrange: '#FF8F00',
+	oceanBlue: '#0097A7',
+	jasperRed: '#D73B3E'
+};
+
 export default {
 	board: {
 		background: 'rgba(255,255,255,0.75)',
@@ -10,14 +25,14 @@ export default {
 		border: '#666666'
 	},
 	display: {
-		background: '#999',
+		background: '#999999',
 		height: 35,
 		smiley: {
 			size: 31,
 			borderColor: '#999999',
 			background: '#222222',
 			backgroundHover: '#444444',
-			color: '#E0C632'
+			color: COLORS.durianYellow
 		}
 	},
 	options: {
@@ -32,35 +47,35 @@ export default {
 	cell: {
 		height: 30,
 		bgColorRevealed: '#333333',
-		bgColorHidden: '#dedacc',
-		bgColorHover: '#b5b3ae',
+		bgColorHidden: COLORS.bone,
+		bgColorHover: COLORS.ecru,
 		border: {
 			color: '#666666',
 			size: 1
 		},
 		neighbors: {
-			one: '#1976D2',
-			two: '#419141',
-			three: '#D32F2F',
-			four: '#7B1FA2',
-			five: '#ff8f00',
-			six: '#0097A7',
+			one: COLORS.cyan,
+			two: COLORS.mint,
+			three: COLORS.amarinthRed,
+			four: COLORS.darkMagenta,
+			five: COLORS.darkOrange,
+			six: COLORS.oceanBlue,
 			seven: '#111111',
 			eight: '#999999',
 		}
 	},
 	flag: {
-		color: '#dc3636',
+		color: COLORS.jasperRed,
 		correct: {
-			color: '#222222',
-			background: '#C2F7DA'
+			color: COLORS.texasGreen,
+			background: COLORS.bone
 		}
 	},
 	mine: {
 		color: '#580F0F',
-		background: '#ea8239',
+		background: '#EA8239',
 		exploded: {
-			color: '#ea8239',
+			color: '#EA8239',
 			background: '#DC3636'
 		} 
 	}

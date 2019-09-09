@@ -38,7 +38,7 @@ const Board = () => {
 	const [{ difficulty }, routerDispatch] = useRoutes();
 
 	const resetIfGameOver = () => {
-		if(game.gameOver) {
+		if(game.gameOver && !game.revealingMines) {
 			routerDispatch({
 				type: 'navigate',
 				page: '',

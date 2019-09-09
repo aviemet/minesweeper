@@ -16,7 +16,6 @@ const Router = () => {
 			return <Settings />
 		case '':
 		default:
-			console.log({difficulty});
 			game.newGame(difficulty);
 			return <Game />
 		}

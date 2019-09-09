@@ -105,20 +105,16 @@ const Cell = observer(({ cell }) => {
 			game.clicks.clear();
 			cell.quickReveal();
 		} else {
-			if(game.clicks.has(e.button)) {
-		
-				switch(e.button) {
-					case 0: // Left Click
-						cell.reveal();					
-						break;
-					case 1: // Middle Click
-						break;
-					case 2: // Right Click
-						cell.toggleFlag()
-						break;
-					default:
-				}
-
+			switch(e.button) {
+				case 0: // Left Click
+					cell.reveal();					
+					break;
+				case 1: // Middle Click
+					break;
+				case 2: // Right Click
+					cell.toggleFlag()
+					break;
+				default:
 			}
 			game.clicks.delete(e.button);
 		}

@@ -4,6 +4,7 @@ class MinesweeperGame {
 	width = 0;
 	height = 0;
 	mineLocations = new Set();
+	revealingMines = false;
 
 	difficulty = {
 		EASY: { width: 8, height: 8, mines: 10 },
@@ -81,18 +82,31 @@ class MinesweeperGame {
 		}, 1);
 	}
 
+	/**
+	 * Reveals all mines at end of game
+	 * Animates reveal of remaining mines if lost
+	 */
 	_revealMines(animate) {
+		this.revealingMines = true; // Lock flag during mines reveal
+
 		if(animate === true) {
+			let revealPromises = [];
+
 			this.mineLocations.forEach(coord => {
-				let timeout = Math.floor(Math.random() * 1000);
-				setTimeout(() => {
-					this.board[coord].hidden = false;
-				}, timeout);
+				revealPromises.push(new Promise((resolve, reject) => {
+					setTimeout(() => {
+						resolve(this.board[coord].hidden = false);
+					}, Math.floor(Math.random() * 1000)); // "Animate" with random reveal time between 0 and 1 second
+				}));
 			});
+
+			// Use Promises to wait for all mines to be revealed, then unset flag
+			Promise.all(revealPromises).then(() => this.revealingMines = false);
 		} else {
 			this.mineLocations.forEach(coord => {
 				this.board[coord].hidden = false;
 			});
+			this.revealingMines = false;
 		}
 	}
 
@@ -128,6 +142,11 @@ class MinesweeperGame {
 		return mineLocations;
 	}
 
+	/**
+	 * If first click is a mine, method in Cell object removes that and surrounding mines
+	 * Use this method to top up mine count after this happens
+	 * @param {Set} ignoredIndices
+	 */
 	addExtraMines(ignoredIndices) {
 		let randomx, randomy = 0;
 	
@@ -193,6 +212,8 @@ class Cell {
 	 */
 	@action
 	reveal() {
+		if(this.game.gameOver) return;
+
 		// Actions for first click of the game
 		if(this.game.revealedCells === 0) {
 			this.game.gameStarted = true;
@@ -206,6 +227,7 @@ class Cell {
 		
 		// Clicking a mine ends the game
 		if(this.mine) {
+			this.hidden = false;
 			this.explode();
 		} else {
 			// Count neighboring mines
@@ -298,6 +320,9 @@ class Cell {
 		}
 	}
 
+	/**
+	 * Iteratator for surrounding cells
+	 */
 	surroundingCells(fn) {
 		const movements = [-1,0,1];
 

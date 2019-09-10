@@ -143,21 +143,48 @@ class MinesweeperGame {
 	}
 
 	/**
+	 * Changes cell and surrounding cells from mines to empty
+	 * Used to ensure that the first click results in a playable game
+	 */
+	@action
+	ensurePleasantStart(cell) {
+		let removedMines = new Set();
+			
+		const index = this.getIndexFromCoords(cell.x, cell.y);
+
+		if(cell.mine) {
+			cell.mine = false;
+			this.mineLocations.delete(index);
+			removedMines.add(index);
+		}
+
+		cell.surroundingCells((cell, coord) => {
+			if(cell.mine) {
+				cell.mine = false;
+				this.mineLocations.delete(coord);
+				removedMines.add(coord);
+			}
+		});
+		this._topUpMines(removedMines);
+	}
+
+	/**
 	 * If first click is a mine, method in Cell object removes that and surrounding mines
 	 * Use this method to top up mine count after this happens
 	 * @param {Set} ignoredIndices
 	 */
-	addExtraMines(ignoredIndices) {
+	_topUpMines(ignoredIndices) {
 		let randomx, randomy = 0;
 	
 		while(this.mineLocations.size < this.mines) {
 			randomx = Math.floor(Math.random() * this.width);
 			randomy = Math.floor(Math.random() * this.height);
-			const coord = this.getIndexFromCoords(randomx, randomy);
+			const index = this.getIndexFromCoords(randomx, randomy);
 
-			if(!ignoredIndices.has(coord)) {
-				this.mineLocations.add(coord);
-				this.board[coord].mine = true;
+			if(!ignoredIndices.has(index)) {
+				console.log({index})
+				this.mineLocations.add(index);
+				this.board[index].mine = true;
 			}
 			
 		}
@@ -219,7 +246,7 @@ class Cell {
 			this.game.gameStarted = true;
 
 			// If first clicked cell is a mine, rearrange mines
-			if(this.mine) this._ensureGameCanStart();
+			this.game.ensurePleasantStart(this);
 		}
 
 		// Do nothing if clicking on a flag or a revealed cell
@@ -245,31 +272,6 @@ class Cell {
 				});
 			}
 		}
-	}
-
-	/**
-	 * Changes this and surrounding cells from mines to empty
-	 * Used to ensure that the first click results in a playable game
-	 */
-	@action
-	_ensureGameCanStart() {
-		let removedMines = new Set();
-			
-		const index = this.game.getIndexFromCoords(this.x, this.y);
-		this.mine = false;
-		this.game.mineLocations.delete(index);
-
-		removedMines.add(index)
-
-		this.surroundingCells((cell, coord) => {
-			if(cell.mine) {
-				cell.mine = false;
-				this.game.mineLocations.delete(coord);
-				removedMines.add(coord);
-			}
-		});
-
-		this.game.addExtraMines(removedMines);
 	}
 
 	/**

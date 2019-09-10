@@ -3,7 +3,6 @@ import Router from './Router';
 import AppLayout from './layout/AppLayout';
 import { ThemeProvider } from 'styled-components';
 import theme from './layout/theme';
-// import * as icons from './layout/icons';
 
 import { GameProvider } from './context/GameStore';
 import { RouteProvider } from './context/RouteStore';

@@ -1,16 +1,24 @@
 import React from 'react';
 import { useRoutes } from '../context/RouteStore';
 import { useGame } from '../context/GameStore';
+import Dropdown from '../components/Dropdown';
 
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
 const DifficultyContainer = styled.div`
 	width: 100%;
-	height: 35px;
+	height: 39px;
 	background-color: #333;
 	border-radius: 0 0 5px 5px;
+	text-align: left;
 `;
 
+const DifficultyPadding = styled.div`
+	padding: 5px;
+`;
+
+/*
 const Button = styled.button`
 	margin: 5px;
 	padding: 3px 8px;
@@ -33,7 +41,7 @@ const Button = styled.button`
 	}
 
 `;
-
+*/
 const DifficultyButton = ({ difficulty, children }) => {
 	const [{}, routerDispatch] = useRoutes();
 
@@ -45,7 +53,12 @@ const DifficultyButton = ({ difficulty, children }) => {
 		});
 	};
 
-	return <Button onClick={ () => changeDifficulty(difficulty) }>{ children }</Button>
+	return (
+		<div onClick={ () => changeDifficulty(difficulty) }>
+			{ children }
+		</div>
+	);
+	// return <Button onClick={ () => changeDifficulty(difficulty) }>{ children }</Button>
 };
 
 
@@ -54,9 +67,22 @@ const Difficulty = props => {
 	
 	return (
 		<DifficultyContainer>
-			<DifficultyButton difficulty={game.difficulty.EASY}>Easy</DifficultyButton>
-			<DifficultyButton difficulty={game.difficulty.MEDIUM}>Medium</DifficultyButton>
-			<DifficultyButton difficulty={game.difficulty.HARD}>Hard</DifficultyButton>
+			<DifficultyPadding>
+				<Dropdown heading="Difficulty">
+					<Dropdown.Item>
+						<DifficultyButton difficulty={game.difficulty.EASY}>Easy</DifficultyButton>
+					</Dropdown.Item>
+					<Dropdown.Item>
+						<DifficultyButton difficulty={game.difficulty.MEDIUM}>Medium</DifficultyButton>
+					</Dropdown.Item>
+					<Dropdown.Item>
+						<DifficultyButton difficulty={game.difficulty.HARD}>Hard</DifficultyButton>
+					</Dropdown.Item>
+				</Dropdown>
+
+				{/* <Icon icon='cogs' /> */}
+
+			</DifficultyPadding>
 		</DifficultyContainer>
 	)
 }

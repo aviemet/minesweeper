@@ -1,7 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faBomb, faFlag, faCogs, faSmile, faSurprise, faGrinStars, faSadTear } from '@fortawesome/free-solid-svg-icons';
+import { faBomb, faFlag, faCogs, faSmile, faSurprise, faGrinStars, faSadTear, faSortDown } from '@fortawesome/free-solid-svg-icons';
 
-library.add( faBomb, faFlag, faCogs, faSmile, faSurprise, faGrinStars, faSadTear );
+library.add( faBomb, faFlag, faCogs, faSmile, faSurprise, faGrinStars, faSadTear, faSortDown );
 
 // Non-gray colors
 const COLORS = {

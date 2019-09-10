@@ -182,7 +182,6 @@ class MinesweeperGame {
 			const index = this.getIndexFromCoords(randomx, randomy);
 
 			if(!ignoredIndices.has(index)) {
-				console.log({index})
 				this.mineLocations.add(index);
 				this.board[index].mine = true;
 			}

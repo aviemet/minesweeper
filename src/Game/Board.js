@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Cell from './Cell';
+import Settings from './Settings';
 
 import styled from 'styled-components';
 import { useGame } from '../context/GameStore';
@@ -21,15 +22,7 @@ const Row = styled.div`
 
 const GameBoard = styled.div`
 	border: 1px solid ${ ({ theme }) => theme.board.border.color };
-
-	/* Disable text highlighting */
-	-webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+	position: relative;
 `;
 
 const Board = () => {
@@ -75,6 +68,9 @@ const Board = () => {
 				)
 			})
 		}
+
+			<Settings />
+		
 		</GameBoard>
 	);
 };

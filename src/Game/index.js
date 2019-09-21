@@ -3,7 +3,7 @@ import React from 'react';
 import Display from './Display';
 import Board from './Board';
 import MenuBar from './MenuBar';
-
+import SettingsMenuProvider from '../context/SettingsMenuContext';
 import styled from 'styled-components';
 
 const GameContainer = styled.div`
@@ -11,6 +11,10 @@ const GameContainer = styled.div`
 	top: 40%;
 	position: relative;
 	transform: translateY(-50%);
+
+	& * {
+		user-select: none;
+	}
 `;
 
 const GameBoard = styled.div`
@@ -26,9 +30,11 @@ const Game = () => {
 	return (
 		<GameContainer>
 			<GameBoard>
-				<Display />
-				<Board />
-				<MenuBar />
+				<SettingsMenuProvider>
+					<Display />
+					<Board />
+					<MenuBar />
+				</SettingsMenuProvider>
 			</GameBoard>
 		</GameContainer>
 	);

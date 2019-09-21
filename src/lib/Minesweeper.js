@@ -21,6 +21,8 @@ class MinesweeperGame {
 	@observable gameOver = false;
 	@observable winner = false;
 
+	@observable quickRevealFlags = false;
+
 	getCoordsFromIndex(index) {
 		const x = index % this.width;
 		const y = Math.floor(index / this.width);
@@ -313,7 +315,7 @@ class Cell {
 			});
 		// If the neighboring mines count is the same as hidden neighbors
 		// Flag the neighboring cells
-		} else if(count === hiddenUnflaggedNeighbors) {
+		} else if(this.game.quickRevealFlags && count === hiddenUnflaggedNeighbors) {
 			this.surroundingCells(cell => {
 				if(cell.hidden && !cell.flag) cell.toggleFlag();
 			});

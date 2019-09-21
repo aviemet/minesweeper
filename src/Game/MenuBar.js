@@ -2,8 +2,8 @@ import React from 'react';
 import { useRoutes } from '../context/RouteStore';
 import { useGame } from '../context/GameStore';
 import Dropdown from '../components/Dropdown';
+import SettingsButton from './SettingsButton';
 
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
 const MenuContainer = styled.div`
@@ -17,20 +17,6 @@ const MenuContainer = styled.div`
 const MenuPadding = styled.div`
 	padding: ${ ({ theme }) => theme.difficulty.padding }px;
 	position: relative;
-`;
-
-const SettingsMenuContainer = styled.div`
-	float: right;
-	color: white;
-	display: inline-block;
-	text-align: right;
-	height: ${ ({ theme }) => theme.difficulty.height - (theme.difficulty.padding * 2) }px;
-
-	& > svg {
-		top: 50%;
-		position: relative;
-		transform: translateY(-50%);
-	}
 `;
 
 const DifficultyButton = ({ difficulty, children }) => {
@@ -48,19 +34,6 @@ const DifficultyButton = ({ difficulty, children }) => {
 		<div onClick={ () => changeDifficulty(difficulty) }>
 			{ children }
 		</div>
-	);
-};
-
-const SettingsButton = () => {
-	
-	const toggleSettingsMenu = () => {
-
-	};
-
-	return (
-		<SettingsMenuContainer>
-			<Icon icon='cogs' size='lg' onClick={ toggleSettingsMenu }/>
-		</SettingsMenuContainer>
 	);
 };
 

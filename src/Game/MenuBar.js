@@ -6,42 +6,33 @@ import Dropdown from '../components/Dropdown';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
-const DifficultyContainer = styled.div`
+const MenuContainer = styled.div`
 	width: 100%;
-	height: 39px;
+	height: ${ ({ theme }) => theme.difficulty.height }px;
 	background-color: #333;
 	border-radius: 0 0 5px 5px;
 	text-align: left;
 `;
 
-const DifficultyPadding = styled.div`
-	padding: 5px;
+const MenuPadding = styled.div`
+	padding: ${ ({ theme }) => theme.difficulty.padding }px;
+	position: relative;
 `;
 
-/*
-const Button = styled.button`
-	margin: 5px;
-	padding: 3px 8px;
-	border-radius: 3px;
-	border: solid 1px ${({ theme }) => theme.options.button.borderColor };
-	background: ${({ theme }) => theme.options.button.background };
-	color: ${({ theme }) => theme.options.button.color };
-	font-family: sans-serif;
-	font-size: 1rem;
-	line-height: 1;
-	text-decoration: none;
-	cursor: pointer;
-	text-align: center;
-	transition: background 250ms ease-in-out, transform 150ms ease;
-	appearance: none;
+const SettingsMenuContainer = styled.div`
+	float: right;
+	color: white;
 	display: inline-block;
+	text-align: right;
+	height: ${ ({ theme }) => theme.difficulty.height - (theme.difficulty.padding * 2) }px;
 
-	&:hover {
-		background:  ${({ theme }) => theme.options.button.backgroundHover };
+	& > svg {
+		top: 50%;
+		position: relative;
+		transform: translateY(-50%);
 	}
-
 `;
-*/
+
 const DifficultyButton = ({ difficulty, children }) => {
 	const [{}, routerDispatch] = useRoutes();
 
@@ -58,16 +49,28 @@ const DifficultyButton = ({ difficulty, children }) => {
 			{ children }
 		</div>
 	);
-	// return <Button onClick={ () => changeDifficulty(difficulty) }>{ children }</Button>
+};
+
+const SettingsButton = () => {
+	
+	const toggleSettingsMenu = () => {
+
+	};
+
+	return (
+		<SettingsMenuContainer>
+			<Icon icon='cogs' size='lg' onClick={ toggleSettingsMenu }/>
+		</SettingsMenuContainer>
+	);
 };
 
 
-const Difficulty = props => {
+const MenuBar = props => {
 	const game = useGame();
 	
 	return (
-		<DifficultyContainer>
-			<DifficultyPadding>
+		<MenuContainer>
+			<MenuPadding>
 				<Dropdown heading="Difficulty">
 					<Dropdown.Item>
 						<DifficultyButton difficulty={game.difficulty.EASY}>Easy</DifficultyButton>
@@ -80,11 +83,11 @@ const Difficulty = props => {
 					</Dropdown.Item>
 				</Dropdown>
 
-				{/* <Icon icon='cogs' /> */}
+				<SettingsButton />
 
-			</DifficultyPadding>
-		</DifficultyContainer>
+			</MenuPadding>
+		</MenuContainer>
 	)
 }
 
-export default Difficulty;
+export default MenuBar;

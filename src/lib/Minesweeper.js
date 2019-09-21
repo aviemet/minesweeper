@@ -24,7 +24,6 @@ class MinesweeperGame {
 	getCoordsFromIndex(index) {
 		const x = index % this.width;
 		const y = Math.floor(index / this.width);
-
 		return { x, y };
 	}
 
@@ -222,12 +221,12 @@ class Cell {
 		
 		if(this.hidden) {
 			this.flag = !this.flag;
-		}
 
-		if(this.flag) {
-			this.game.flags++;
-		} else {
-			this.game.flags--;
+			if(this.flag) {
+				this.game.flags++;
+			} else {
+				this.game.flags--;
+			}
 		}
 	}
 

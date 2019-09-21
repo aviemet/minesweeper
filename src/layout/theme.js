@@ -77,6 +77,10 @@ export default {
 		exploded: {
 			color: '#EA8239',
 			background: '#DC3636'
-		} 
+		}
+	},
+	difficulty: {
+		height: 39,
+		padding: 5
 	}
 };

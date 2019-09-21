@@ -50,16 +50,22 @@ const MenuItem = styled.div`
 
 `;
 
-const DropdownItem = props => {
-	return (
-		<MenuItem className='item'>{ props.children }</MenuItem>	
-	);
-};
-
 const Dropdown = props => {
 	const [ visible, setVisible ] = useState(false);
 
-	const toggleMenu = () => setVisible(!visible);
+	const hideMenu = e => {
+		// Wait a tick for propagation to complete
+		setTimeout(() => {
+			setVisible(false);
+		}, 1);
+	};
+
+	const toggleMenu = e => {
+		if(!visible) {
+			setVisible(true);
+			document.getElementsByTagName('body')[0].addEventListener('click', hideMenu, { once: true });
+		}
+	};
 
 	return (
 		<DropdownContainer onClick={ toggleMenu }>
@@ -69,6 +75,13 @@ const Dropdown = props => {
 				{ props.children }
 			</Menu>
 		</DropdownContainer>
+	);
+};
+
+// Pass Component as child of default export
+const DropdownItem = props => {
+	return (
+		<MenuItem className='item'>{ props.children }</MenuItem>	
 	);
 };
 

@@ -110,6 +110,7 @@ const Cell = observer(({ cell }) => {
 					cell.reveal();					
 					break;
 				case 1: // Middle Click
+					cell.quickReveal();
 					break;
 				case 2: // Right Click
 					cell.toggleFlag()
@@ -121,7 +122,6 @@ const Cell = observer(({ cell }) => {
 
 		if(game.checkForVictory()) {
 			e.stopPropagation();
-			console.log('Victory!')
 		}
 	}
 

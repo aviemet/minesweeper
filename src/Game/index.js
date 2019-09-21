@@ -2,7 +2,7 @@ import React from 'react';
 
 import Display from './Display';
 import Board from './Board';
-import Difficulty from './Difficulty';
+import MenuBar from './MenuBar';
 
 import styled from 'styled-components';
 
@@ -28,7 +28,7 @@ const Game = () => {
 			<GameBoard>
 				<Display />
 				<Board />
-				<Difficulty />
+				<MenuBar />
 			</GameBoard>
 		</GameContainer>
 	);

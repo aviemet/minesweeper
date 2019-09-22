@@ -20,7 +20,7 @@ const CellContainer = styled.div`
 	&.hidden {
 		background-color: ${ ({ theme }) => theme.cell.bgColorHidden };
 
-		&:hover {
+		&:hover, &.highlight {
 			background-color: ${ ({ theme }) => theme.cell.bgColorHover };
 		}
 	}
@@ -87,7 +87,7 @@ const CellContainer = styled.div`
 
 const Cell = observer(({ cell }) => {
 	const game = useGame();
-	const { hidden, flag, mine, neighbors, loser } = cell;
+	const { hidden, flag, mine, neighbors, loser, highlight } = cell;
 
 	// Prevent losing click from also resetting the board;
 	const handleClick = e => {
@@ -97,13 +97,22 @@ const Cell = observer(({ cell }) => {
 	// Delegate click handling to Game object to allow moving mouse during mousedown
 	// to different cell. Allows any cell to handle the mouseup event while also 
 	// detecting the left+right click action
-	const handleMouseDown = e => game.clicks.add(e.button);
+	const handleMouseDown = e => {
+		game.clicks.add(e.button);
+
+		// If right and left button pressed, highlight surrounding cells
+		if(game.clicks.has(0) && game.clicks.has(2)) {
+			cell.highlightSurrounding(true);
+		}
+	}
 
 	const handleMouseUp = e => {
 		// If right and left button pressed, use quick reveal
 		if(game.clicks.has(0) && game.clicks.has(2)) {
+			// Clear all clicks to prevent mouseup detection on other buttons
 			game.clicks.clear();
 			cell.quickReveal();
+			cell.highlightSurrounding(false);
 		} else {
 			switch(e.button) {
 				case 0: // Left Click
@@ -125,6 +134,18 @@ const Cell = observer(({ cell }) => {
 		}
 	}
 
+	const handleMouseOver = e => {
+		if(game.clicks.has(0) && game.clicks.has(2)) {
+			cell.highlightSurrounding(true);
+		}
+	}
+
+	const handleMouseOut = e => {
+		if(game.clicks.has(0) && game.clicks.has(2)) {
+			cell.highlightSurrounding(false);
+		}
+	}
+
 	const classes = () => {
 		const neighborClasses = [null, 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' ];
 
@@ -135,6 +156,10 @@ const Cell = observer(({ cell }) => {
 
 		if(hidden) {
 			cellClasses.push('hidden');
+
+			if(!flag && highlight) {
+				cellClasses.push('highlight');
+			}
 		} else {
 			if(mine) {
 				cellClasses.push('mine');
@@ -147,12 +172,13 @@ const Cell = observer(({ cell }) => {
 		return cellClasses.join(' ');
 	};
 
-
 	return (
 		<CellContainer
-			onClick={handleClick}
-			onMouseDown={handleMouseDown}
-			onMouseUp={handleMouseUp}
+			onClick={ handleClick }
+			onMouseDown={ handleMouseDown }
+			onMouseUp={ handleMouseUp }
+			onMouseOver={ handleMouseOver }
+			onMouseOut={ handleMouseOut }
 			className={classes()}
 		>
 			<span>

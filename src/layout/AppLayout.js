@@ -23,10 +23,10 @@ const Content = styled.div`
 const AppLayout = ({ children }) => {
 	const [ bgImage, setBgImage ] = useState(null);
 
-	/*useEffect(() => {
+	useEffect(() => {
 		fetch('https://source.unsplash.com/random/1024x768', { mode: 'cors' })
 			.then(res => setBgImage(res.url));
-	}, []);*/
+	}, []);
 
 	return (
 		<AppStyle style={ { backgroundImage: `url(${bgImage})` } }>

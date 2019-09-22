@@ -214,6 +214,7 @@ class Cell {
 	@observable hidden = true;
 	@observable flag = false;
 	@observable neighbors = 0;
+	@observable highlight = false;
 
 	constructor(x, y, mine, game) {
 		this.x = x;
@@ -303,6 +304,12 @@ class Cell {
 
 	@action
 	quickReveal() {
+		// Don't allow quick reveal on first click
+		if(this.game.revealedCells === 0) {
+			this.reveal();
+			return;
+		}
+
 		let count = this.neighbors;
 		let hiddenUnflaggedNeighbors = 0;
 
@@ -325,6 +332,15 @@ class Cell {
 				if(cell.hidden && !cell.flag) cell.toggleFlag();
 			});
 		}
+	}
+
+	@action
+	highlightSurrounding(highlight) {
+		this.surroundingCells(cell => {
+			if(cell.hidden) {
+				cell.highlight = highlight;
+			}
+		});
 	}
 
 	/**

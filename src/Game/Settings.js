@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import styled from 'styled-components';
 
 const MENU_TRANSITION_TIME = 0.25;
-
+const RADIO_WIDTH = 20;
 const lightGray = '#F1F1F1';
 
 const SettingsContainer = styled.div`
@@ -59,8 +59,8 @@ const FlagInputContainer = styled.div`
 		background-color: #f1f1f1;
 		color: #666;
 		top: 5px;
-		height: 20px;
-		width: 20px;
+		height: ${RADIO_WIDTH}px;
+		width: ${RADIO_WIDTH}px;
 		border: 0;
 		border-radius: 50%;
 		cursor: pointer;     
@@ -71,13 +71,14 @@ const FlagInputContainer = styled.div`
 
 	input[type=radio]:checked::before {
 		position: absolute;
-		left: 5px;
-		top: -8px;
-		font-size: 1.5rem;
-		content: '\\02143';
-		transform: rotate(40deg);
-		color: ${ ({ theme }) => theme.colors.mint };
-		font-weight: bold;
+		display: block;
+		width: calc(${RADIO_WIDTH}px - 4px);
+		height: calc(${RADIO_WIDTH}px - 4px);
+		left: 2px;
+		top: 2px;
+		background: ${ ({ theme }) => theme.colors.mint };
+		content: ' ';
+		border-radius: 50%;
 	}
 
 	input[type=radio]:hover {

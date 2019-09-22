@@ -21,7 +21,12 @@ class MinesweeperGame {
 	@observable gameOver = false;
 	@observable winner = false;
 
-	@observable quickRevealFlags = false;
+	@observable _quickRevealFlags = JSON.parse(localStorage.getItem('quickRevealFlags')) || false;
+	get quickRevealFlags() { return this._quickRevealFlags; }
+	set quickRevealFlags(value) {
+		this._quickRevealFlags = value;
+		localStorage.setItem('quickRevealFlags', value);
+	}
 
 	getCoordsFromIndex(index) {
 		const x = index % this.width;

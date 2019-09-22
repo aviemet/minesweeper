@@ -19,6 +19,7 @@ const COLORS = {
 };
 
 export default {
+	colors: COLORS,
 	board: {
 		background: 'rgba(255,255,255,0.75)',
 		shadow: '0 0 10px #666',
@@ -82,5 +83,8 @@ export default {
 	difficulty: {
 		height: 39,
 		padding: 5
+	},
+	settings: {
+		width: 180
 	}
 };

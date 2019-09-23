@@ -28,22 +28,20 @@ const GameBoard = styled.div`
 const Board = () => {
 
 	const game = useGame();
-	const [{ difficulty }, routerDispatch] = useRoutes();
+	const { route, routeDispatcher } = useRoutes();
 
 	const resetIfGameOver = () => {
 		if(game.gameOver && !game.revealingMines) {
-			routerDispatch({
+			routeDispatcher({
 				type: 'navigate',
 				page: '',
-				difficulty
+				difficulty: route.difficulty
 			});
 		}
 	}
 
 	// Right click
-	const disableContextMenu = e => {
-		e.preventDefault();
-	}
+	const disableContextMenu = e => e.preventDefault();
 
 	return (
 		<GameBoard 

@@ -20,10 +20,10 @@ const MenuPadding = styled.div`
 `;
 
 const DifficultyButton = ({ difficulty, children }) => {
-	const [{}, routerDispatch] = useRoutes();
+	const { routeDispatcher } = useRoutes();
 
 	const changeDifficulty = difficulty => {
-		routerDispatch({
+		routeDispatcher({
 			type: 'navigate',
 			page: '',
 			difficulty

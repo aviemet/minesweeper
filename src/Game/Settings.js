@@ -81,7 +81,7 @@ const BottomContainer = styled.div`
 const Settings = observer(() => {
 	const game = useGame();
 	const settingsMenu = useSettingsMenu();
-	const [ {}, routerDispatch ] = useRoutes();
+	const { routeDispatcher } = useRoutes();
 
 	const [ randomBg, setRandomBg ] = useState(JSON.parse(localStorage.getItem('bgenabled')));
 
@@ -96,7 +96,7 @@ const Settings = observer(() => {
 	}
 
 	const showScoreBoard = () => {
-		routerDispatch({
+		routeDispatcher({
 			type: 'navigate',
 			page: 'scores',
 		});

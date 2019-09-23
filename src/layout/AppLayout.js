@@ -73,7 +73,7 @@ const AppLayout = ({ children }) => {
 			fetch('https://source.unsplash.com/random/1024x768', { mode: 'cors' })
 				.then(res => setBgImage(res.url));
 		}
-	}, []);
+	}, [useRandomBg]);
 
 	return (
 		<AppStyle style={ { backgroundImage: `url(${bgImage})` } }>

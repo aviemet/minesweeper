@@ -75,14 +75,14 @@ const ICONS = {
 
 const Display = observer(() => {
 	const game = useGame();
-	const [{ difficulty }, routerDispatch] = useRoutes();
+	const { route, routeDispatcher } = useRoutes();
 	const [ faceIcon, setFaceIcon ] = useState(ICONS.NORMAL);
 
 	const resetGame = () => {
-		routerDispatch({
+		routeDispatcher({
 			type: 'navigate',
 			page: '',
-			difficulty
+			difficulty: route.difficulty
 		});
 	}
 	
@@ -100,7 +100,7 @@ const Display = observer(() => {
 		}
 
 		setFaceIcon(face);
-	}, [game.clicks.size, game.gameOver]);
+	}, [game.clicks.size, game.gameOver, game.winner]);
 
 	return (
 		<DisplayContainer>

@@ -20,6 +20,7 @@ const COLORS = {
 
 export default {
 	colors: COLORS,
+	checkWidth: 20,
 	board: {
 		background: 'rgba(255,255,255,0.75)',
 		shadow: '0 0 10px #666',
@@ -85,6 +86,7 @@ export default {
 		padding: 5
 	},
 	settings: {
-		width: 180
+		width: 180,
+		transitionTime: 0.25
 	}
 };

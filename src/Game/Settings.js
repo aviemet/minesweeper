@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGame } from '../context/GameStore';
+import { useRoutes } from '../context/RouteStore';
 import { useSettingsMenu } from '../context/SettingsMenuContext';
 import { observer } from 'mobx-react-lite';
 
 import styled from 'styled-components';
 
-const MENU_TRANSITION_TIME = 0.25;
-const RADIO_WIDTH = 20;
 const lightGray = '#F1F1F1';
 
 const SettingsContainer = styled.div`
@@ -22,7 +21,7 @@ const SettingsContainer = styled.div`
 	color: ${lightGray};
 
 	width: 0;
-	transition: width ${MENU_TRANSITION_TIME}s ease-in-out;
+	transition: width ${ ({ theme }) => theme.settings.transitionTime }s ease-in-out;
 
 	&.visible {
 		width: ${ ({ theme }) => theme.settings.width }px;
@@ -45,65 +44,63 @@ const SettingsInnerContainer = styled.div`
 	padding: 5px;
 	text-align: left;
 	overflow: hidden;
-	width: calc(${ ({ theme }) => theme.settings.width }px - 10px);
+	width: ${ ({ theme }) => theme.settings.width - 10 }px;
 `;
 
-const FlagInputContainer = styled.div`
+const InputContainer = styled.div`
 	display: block;
 	padding: 0 0 5px 5px;
+`;
 
-	input[type=radio] {
-		appearance: none;
-		display: inline-block;
-		position: relative;
-		background-color: #f1f1f1;
-		color: #666;
-		top: 5px;
-		height: ${RADIO_WIDTH}px;
-		width: ${RADIO_WIDTH}px;
-		border: 0;
-		border-radius: 50%;
-		cursor: pointer;     
-		margin-right: 7px;
-		outline: none;
-		transition: background ${MENU_TRANSITION_TIME}s ease-in-out;
-	}
+const BottomContainer = styled.div`
+	position: absolute;
+	bottom: 0;
+	text-align: right;
+	padding-right: 5px;
+	overflow: hidden;
 
-	input[type=radio]:checked::before {
-		position: absolute;
-		display: block;
-		width: calc(${RADIO_WIDTH}px - 4px);
-		height: calc(${RADIO_WIDTH}px - 4px);
-		left: 2px;
-		top: 2px;
-		background: ${ ({ theme }) => theme.colors.mint };
-		content: ' ';
-		border-radius: 50%;
-	}
-
-	input[type=radio]:hover {
-		background-color: #999999;
-	}
-
-	input[type=radio]:checked {
-		background-color: #f1f1f1;
-	}
-
-	label {
-		-webkit-font-smoothing: antialiased;
-		-moz-osx-font-smoothing: grayscale;
+	button {
+		background: none;
+		border: none;
+		padding: 0;
+		font-size: 1.2em;
+		text-decoration: underline;
 		cursor: pointer;
+		color: #F1F1F1;
+		transition: color ${ ({ theme }) => theme.settings.transitionTime }s ease-in-out;
+		overflow: hidden;
+		display: block;
+		width: ${ ({ theme }) => theme.settings.width - 10 }px;
+	}
+
+	button:hover {
+		color: #CCCCCC;
 	}
 `;
 
 const Settings = observer(() => {
+	const game = useGame();
+	const settingsMenu = useSettingsMenu();
+	const [ {}, routerDispatch ] = useRoutes();
 
-	let game = useGame();
-	let settingsMenu = useSettingsMenu();
+	const [ randomBg, setRandomBg ] = useState(JSON.parse(localStorage.getItem('bgenabled')));
 
-	const setFlagsOption = flags => game.quickRevealFlags = flags;
+	const flagsOptionChecked = game.quickRevealFlags;
 
-	const checkedOption = game.quickRevealFlags;
+	const setFlagsOption = value => game.quickRevealFlags = value;
+	const toggleRandomBgOption = () => {
+		// Timing issues with useState, cache the toggled value for both setters
+		const newValue = !randomBg;
+		setRandomBg(newValue);
+		localStorage.setItem('bgenabled', newValue);
+	}
+
+	const showScoreBoard = () => {
+		routerDispatch({
+			type: 'navigate',
+			page: 'scores',
+		});
+	}
 
 	return (
 		<SettingsContainer className={ settingsMenu.visible && 'visible' }>
@@ -112,13 +109,13 @@ const Settings = observer(() => {
 
 				<h2>2-button click:</h2>
 
-				<FlagInputContainer>
+				<InputContainer>
 					<input 
 						type='radio' 
 						name='buttonClickOption' 
 						value='flags' 
 						id='flags'
-						checked={ checkedOption } 
+						checked={ flagsOptionChecked } 
 						onChange={ () => setFlagsOption(true) } 
 					/>
 					<label htmlFor='flags'>Mark Flags</label>
@@ -130,11 +127,29 @@ const Settings = observer(() => {
 						name='buttonClickOption' 
 						value='reveal'
 						id='reveal'
-						checked={ !checkedOption }
+						checked={ !flagsOptionChecked }
 						onChange={ () => setFlagsOption(false) } 
 					/> 
 					<label htmlFor='reveal'>Reveal Only</label>
-				</FlagInputContainer>
+				</InputContainer>
+
+				<h2>Background Image</h2>
+				<InputContainer>
+					<input 
+						type='checkbox'
+						name='randomBgOption'
+						value='randomBg'
+						id='randomBg'
+						checked={ randomBg }
+						onChange={ () => toggleRandomBgOption() }
+					/>
+					<label htmlFor='randomBg'>Randomize</label>
+				</InputContainer>
+
+				<BottomContainer>
+					<button onClick={ showScoreBoard }>Score Board</button>
+				</BottomContainer>
+
 
 			</SettingsInnerContainer>
 		</SettingsContainer>

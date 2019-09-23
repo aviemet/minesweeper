@@ -12,6 +12,49 @@ const AppStyle = styled.div`
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
+
+	input[type=radio], input[type=checkbox] {
+		appearance: none;
+		display: inline-block;
+		position: relative;
+		background-color: #f1f1f1;
+		color: #666;
+		top: 5px;
+		height: ${ ({ theme }) => theme.checkWidth }px;
+		width: ${ ({ theme }) => theme.checkWidth }px;
+		border: 0;
+		border-radius: 50%;
+		cursor: pointer;     
+		margin-right: 7px;
+		outline: none;
+		transition: background ${ ({ theme }) => theme.settings.transitionTime }s ease-in-out;
+	}
+
+	input[type=radio]:checked::before, input[type=checkbox]:checked::before {
+		position: absolute;
+		display: block;
+		width: calc(${ ({ theme }) => theme.checkWidth }px - 4px);
+		height: calc(${ ({ theme }) => theme.checkWidth }px - 4px);
+		left: 2px;
+		top: 2px;
+		background: ${ ({ theme }) => theme.colors.mint };
+		content: ' ';
+		border-radius: 50%;
+	}
+
+	input[type=radio]:hover, input[type=checkbox]:hover {
+		background-color: #999999;
+	}
+
+	input[type=radio]:checked, input[type=checkbox]:checked {
+		background-color: #f1f1f1;
+	}
+
+	label {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		cursor: pointer;
+	}
 `;
 
 const Content = styled.div`
@@ -23,9 +66,13 @@ const Content = styled.div`
 const AppLayout = ({ children }) => {
 	const [ bgImage, setBgImage ] = useState(null);
 
+	const useRandomBg = JSON.parse(localStorage.getItem('bgenabled'));
+
 	useEffect(() => {
-		fetch('https://source.unsplash.com/random/1024x768', { mode: 'cors' })
-			.then(res => setBgImage(res.url));
+		if(useRandomBg !== false) {
+			fetch('https://source.unsplash.com/random/1024x768', { mode: 'cors' })
+				.then(res => setBgImage(res.url));
+		}
 	}, []);
 
 	return (

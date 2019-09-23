@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useGame } from './context/GameStore';
 import Game from './Game';
-import Settings from './Settings';
+import Score from './Score';
 
 import { useRoutes } from './context/RouteStore';
 
@@ -10,10 +10,10 @@ const Router = () => {
 	const [{ currentPage, difficulty }] = useRoutes();
 
 	const game = useGame();
-
+console.log({ currentPage });
 	switch (currentPage) {
-		case 'settings':
-			return <Settings />
+		case 'scores':
+			return <Score />
 		case '':
 		default:
 			game.newGame(difficulty);

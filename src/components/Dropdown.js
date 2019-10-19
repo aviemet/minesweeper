@@ -79,12 +79,10 @@ const Dropdown = props => {
 };
 
 // Pass Component as child of default export
-const DropdownItem = props => {
+Dropdown.Item = props => {
 	return (
 		<MenuItem className='item'>{ props.children }</MenuItem>	
 	);
 };
-
-Dropdown.Item = DropdownItem;
 
 export default Dropdown;

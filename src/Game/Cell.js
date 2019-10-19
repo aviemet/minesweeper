@@ -107,6 +107,8 @@ const Cell = observer(({ cell }) => {
 	}
 
 	const handleMouseUp = e => {
+		e.stopPropagation();
+
 		// If right and left button pressed, use quick reveal
 		if(game.clicks.has(0) && game.clicks.has(2)) {
 			// Clear all clicks to prevent mouseup detection on other buttons
@@ -129,9 +131,7 @@ const Cell = observer(({ cell }) => {
 			game.clicks.delete(e.button);
 		}
 
-		if(game.checkForVictory()) {
-			e.stopPropagation();
-		}
+		if(!game.gameOver) game.checkForVictory();
 	}
 
 	const handleMouseOver = e => {
@@ -146,11 +146,13 @@ const Cell = observer(({ cell }) => {
 		}
 	}
 
+	// Build the classes string for the cell
 	const classes = () => {
-		const neighborClasses = [null, 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' ];
+		// Possible numbers of nieghboring mines, 0 indexed
+		const neighborClasses = [ null, 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' ];
 
+		// Default class
 		let cellClasses = ['cell'];
-
 
 		if(flag) cellClasses.push('flag');
 
@@ -163,6 +165,7 @@ const Cell = observer(({ cell }) => {
 		} else {
 			if(mine) {
 				cellClasses.push('mine');
+				// Highlight the mine which lost the game
 				if(loser) cellClasses.push('loser');
 			} else if(neighbors > 0) {
 				cellClasses.push(`neighbors-${neighborClasses[neighbors]}`);

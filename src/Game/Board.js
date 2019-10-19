@@ -6,6 +6,8 @@ import Settings from './Settings';
 import styled from 'styled-components';
 import { useGame } from '../context/GameStore';
 import { useRoutes } from '../context/RouteStore';
+import { observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
 
 const Row = styled.div`
 	display: block;

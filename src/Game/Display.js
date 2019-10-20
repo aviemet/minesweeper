@@ -4,7 +4,7 @@ import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import Timer from './Timer';
 
 import { observer } from 'mobx-react-lite';
-import { useGame } from '../context/GameStore';
+import { useGame } from '../context/GameContext';
 import { useRoutes } from '../context/RouteStore';
 
 import styled from 'styled-components';

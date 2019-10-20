@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useGame } from '../context/GameStore';
-import useInterval from '../lib/useInterval';
 import { observer } from 'mobx-react-lite';
+
+import { useDb } from '../context/DbContext';
+import { useGame } from '../context/GameContext';
+import useInterval from '../lib/useInterval';
 
 import styled from 'styled-components';
 import CounterContainer from '../components/CounterContainer';
@@ -15,6 +17,7 @@ const Timer = observer(() => {
 	const [ isCounting, setIsCounting ] = useState(false);
 	
 	const game = useGame();
+	const mongoClient = useDb();
 
 	useInterval(() => {
 		setSeconds(seconds + 1);
@@ -25,15 +28,17 @@ const Timer = observer(() => {
 			setSeconds(0);
 			setIsCounting(false);
 		}
+
 		if(game.gameOver) {
 			setIsCounting(false);
-		} else {
-			setSeconds(0);
-			if(game.gameStarted) {
-				setIsCounting(true);
-			}
+		} else if(game.gameStarted) {
+			setIsCounting(true);
 		}
-	}, [game.gameOver, game.gameStarted]);
+
+		if(game.winner === true && game.gameOver === false) {
+			console.log(`You win! Score: ${seconds}`);
+		}
+	}, [game.gameOver, game.gameStarted, game.winner]);
 
 	const zeroPadded = num => {
 		return num.toString().padStart(3, '0');

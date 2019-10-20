@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useGame } from '../context/GameStore';
+import { useGame } from '../context/GameContext';
 import { useRoutes } from '../context/RouteStore';
-import { useSettingsMenu } from '../context/SettingsMenuContext';
+import { useApp } from '../context/AppContext';
 import { observer } from 'mobx-react-lite';
 
 import styled from 'styled-components';
@@ -80,8 +80,10 @@ const BottomContainer = styled.div`
 
 const Settings = observer(() => {
 	const game = useGame();
-	const settingsMenu = useSettingsMenu();
+	const app = useApp();
 	const { routeDispatcher } = useRoutes();
+
+	console.log({ app });
 
 	const [ randomBg, setRandomBg ] = useState(JSON.parse(localStorage.getItem('bgenabled')));
 
@@ -103,7 +105,7 @@ const Settings = observer(() => {
 	}
 
 	return (
-		<SettingsContainer className={ settingsMenu.visible && 'visible' }>
+		<SettingsContainer className={ app.settingsMenuVisible && 'visible' }>
 			<SettingsInnerContainer>
 				<h1>Settings</h1>
 

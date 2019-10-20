@@ -1,5 +1,6 @@
 import React from 'react';
-import { useSettingsMenu } from '../context/SettingsMenuContext';
+import { useApp } from '../context/AppContext';
+
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
@@ -24,11 +25,9 @@ const SettingsButtonContainer = styled.div`
 `;
 
 const SettingsButton = () => {
-	const settingsMenu = useSettingsMenu();
+	const app = useApp();
 	
-	const toggleSettingsMenu = () => {
-		settingsMenu.toggleVisible();
-	};
+	const toggleSettingsMenu = () => app.toggleSettingsMenu();
 
 	return (
 		<SettingsButtonContainer>

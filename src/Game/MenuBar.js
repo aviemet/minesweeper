@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRoutes } from '../context/RouteStore';
-import { useGame } from '../context/GameStore';
+import { useGame } from '../context/GameContext';
 import Dropdown from '../components/Dropdown';
 import SettingsButton from './SettingsButton';
 

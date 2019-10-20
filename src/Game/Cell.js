@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
-import { useGame } from '../context/GameStore';
+import { useGame } from '../context/GameContext';
 import { observer } from 'mobx-react-lite';
 
 const CellContainer = styled.div`

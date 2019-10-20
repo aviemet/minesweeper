@@ -3,7 +3,6 @@ import React from 'react';
 import Display from './Display';
 import Board from './Board';
 import MenuBar from './MenuBar';
-import SettingsMenuProvider from '../context/SettingsMenuContext';
 import styled from 'styled-components';
 
 const GameContainer = styled.div`
@@ -30,11 +29,9 @@ const Game = () => {
 	return (
 		<GameContainer>
 			<GameBoard>
-				<SettingsMenuProvider>
-					<Display />
-					<Board />
-					<MenuBar />
-				</SettingsMenuProvider>
+				<Display />
+				<Board />
+				<MenuBar />
 			</GameBoard>
 		</GameContainer>
 	);

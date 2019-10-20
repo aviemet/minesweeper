@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useGame } from './context/GameStore';
+import { useGame } from './context/GameContext';
 import Game from './Game';
 import Score from './Score';
 

@@ -4,20 +4,23 @@ import AppLayout from './layout/AppLayout';
 import { ThemeProvider } from 'styled-components';
 import theme from './layout/theme';
 
-import { GameProvider } from './context/GameStore';
+import { GameProvider } from './context/GameContext';
 import { RouteProvider } from './context/RouteStore';
+import { AppProvider } from './context/AppContext';
 
 function App() {
   return (
-    <GameProvider>
-      <RouteProvider>
-        <ThemeProvider theme={theme}>
-          <AppLayout>
-            <Router />
-          </AppLayout>
-        </ThemeProvider>
-      </RouteProvider>
-    </GameProvider>
+    <AppProvider>
+      <GameProvider>
+        <RouteProvider>
+          <ThemeProvider theme={theme}>
+            <AppLayout>
+              <Router />
+            </AppLayout>
+          </ThemeProvider>
+        </RouteProvider>
+      </GameProvider>
+    </AppProvider>
   );
 }
 

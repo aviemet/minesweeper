@@ -1,4 +1,5 @@
 import { observable, action } from "mobx";
+import _ from 'lodash';
 
 class MinesweeperGame {
 	width = 0;
@@ -20,6 +21,7 @@ class MinesweeperGame {
 	@observable gameStarted = false;
 	@observable gameOver = false;
 	@observable winner = false;
+	@observable seconds = 0;
 
 	@observable _quickRevealFlags = JSON.parse(localStorage.getItem('quickRevealFlags')) || false;
 	get quickRevealFlags() { return this._quickRevealFlags; }
@@ -202,6 +204,17 @@ class MinesweeperGame {
 			return true;
 		}
 		return false;
+	}
+
+	getDifficulty() {
+		const compare = { width: this.width, height: this.height, mines: this.mines };
+
+		for(let [key, value] of Object.entries(this.difficulty)) {
+			if(_.isEqual(compare, value)) {
+				return key.toLowerCase();
+			}
+		}
+		return 'custom';
 	}
 
 }

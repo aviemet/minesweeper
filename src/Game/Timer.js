@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { useDb } from '../context/DbContext';
+import { useApp } from '../context/AppContext';
 import { useGame } from '../context/GameContext';
 import useInterval from '../lib/useInterval';
 
@@ -17,7 +17,7 @@ const Timer = observer(() => {
 	const [ isCounting, setIsCounting ] = useState(false);
 	
 	const game = useGame();
-	const mongoClient = useDb();
+	const app = useApp();
 
 	useInterval(() => {
 		setSeconds(seconds + 1);
@@ -36,7 +36,9 @@ const Timer = observer(() => {
 		}
 
 		if(game.winner === true && game.gameOver === false) {
-			console.log(`You win! Score: ${seconds}`);
+			console.log('Winner');
+			game.seconds = seconds;
+			app.toggleWinnerDialog(true);
 		}
 	}, [game.gameOver, game.gameStarted, game.winner]);
 

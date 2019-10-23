@@ -1,20 +1,26 @@
-import { observable, action } from "mobx";
-import { Stitch, RemoteMongoClient } from 'mongodb-stitch-browser-sdk';
+import { observable, action, extendObservable } from "mobx";
+import { Stitch, RemoteMongoClient, UserApiKeyCredential, AnonymousCredential } from 'mongodb-stitch-browser-sdk';
 
 const APP_ID = process.env.REACT_APP_MONGO_API_KEY;
 
 class AppStore {
-	mongoClient;
+	db;
+	dbUser;
 	
 	@observable settingsMenuVisible = false;
+	@observable showWinnerDialog = false;
 
 	constructor() {
 		// Instantiate DB connection, save as instance variable
-		const app = Stitch.hasAppClient(APP_ID) ? Stitch.getAppClient(APP_ID) : Stitch.initializeAppClient(APP_ID);
-		this.mongoClient = app.getServiceClient(
+		const client = Stitch.initializeDefaultAppClient(process.env.REACT_APP_MONGO_APP_ID);
+		this.db = client.getServiceClient(
 			RemoteMongoClient.factory,
 			"mongodb-atlas"
-		);
+		).db('minesweeper');
+
+		client.auth.loginWithCredential(new UserApiKeyCredential(process.env.REACT_APP_STITCH_API_KEY)).then(user => {
+			this.dbUser = user;
+		}).catch(console.error);
 	}
 
 	/**
@@ -24,12 +30,31 @@ class AppStore {
 	 */
 	@action
 	toggleSettingsMenu(visible) {
-		console.log({ this: this });
 		if(typeof visible === 'boolean') {
 			this.settingsMenuVisible = visible;
 		} else {
 			this.settingsMenuVisible = !this.settingsMenuVisible;
 		}
+	}
+
+	@action
+	toggleWinnerDialog(visible) {
+		if(typeof visible === 'boolean') {
+			this.showWinnerDialog = visible;
+		} else {
+			this.showWinnerDialog = !this.showWinnerDialog;
+		}
+	}
+
+	async saveScore(data) {
+		return await this.db.collection('scores').insertOne(Object.assign({
+			owner_id: this.dbUser.id,
+			createdAt: new Date()
+		}, data));
+	}
+
+	async getScores() {
+		return await this.db.collection('scores').find({}).toArray();
 	}
 }
 

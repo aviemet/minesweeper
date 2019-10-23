@@ -7,3 +7,45 @@ html, body, #root{
 
 	font-family: 'Roboto', sans-serif;
 }
+
+input {
+	padding: 10px;
+  border: none;
+  border-radius: 5px;
+	outline: none;
+	font-size: 1.2rem;
+}
+
+button {
+	display:inline-block;
+	padding: 5px 8px;
+	margin: 5px;
+	border: 0;
+	outline: none;
+	border-radius: 5px;
+	box-sizing: border-box;
+	text-decoration:none;
+	font-size: 1.2rem;
+	font-weight: 700;
+	color:#333;
+	background-color:#CCC;
+	position: relative;
+	cursor: pointer;
+}
+
+button:hover {
+	filter: brightness(0.9);
+}
+
+table {
+	text-align: left;
+	border-collapse: collapse;
+}
+
+thead {
+	border-bottom: 2px solid #111;
+}
+
+td, th {
+	padding: 10px;
+}

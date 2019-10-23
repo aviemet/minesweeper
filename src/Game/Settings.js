@@ -19,6 +19,7 @@ const SettingsContainer = styled.div`
 	border-bottom: 1px solid #333333;
 	overflow: hidden;
 	color: ${lightGray};
+	z-index: 1000;
 
 	width: 0;
 	transition: width ${ ({ theme }) => theme.settings.transitionTime }s ease-in-out;
@@ -82,8 +83,6 @@ const Settings = observer(() => {
 	const game = useGame();
 	const app = useApp();
 	const { routeDispatcher } = useRoutes();
-
-	console.log({ app });
 
 	const [ randomBg, setRandomBg ] = useState(JSON.parse(localStorage.getItem('bgenabled')));
 

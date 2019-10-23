@@ -3,6 +3,8 @@ import React from 'react';
 import Display from './Display';
 import Board from './Board';
 import MenuBar from './MenuBar';
+import Winner from './Winner';
+
 import styled from 'styled-components';
 
 const GameContainer = styled.div`
@@ -27,13 +29,16 @@ const GameBoard = styled.div`
 
 const Game = () => {
 	return (
-		<GameContainer>
-			<GameBoard>
-				<Display />
-				<Board />
-				<MenuBar />
-			</GameBoard>
-		</GameContainer>
+		<>
+			<GameContainer>
+				<GameBoard>
+					<Display />
+					<Board />
+					<MenuBar />
+				</GameBoard>
+			</GameContainer>
+			<Winner/>
+		</>
 	);
 }
 

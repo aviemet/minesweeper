@@ -8,6 +8,7 @@ import { useGame } from '../context/GameContext';
 import { useRoutes } from '../context/RouteStore';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
+import { useApp } from '../context/AppContext';
 
 const Row = styled.div`
 	display: block;
@@ -27,9 +28,26 @@ const GameBoard = styled.div`
 	position: relative;
 `;
 
-const Board = () => {
+const PageDimmer = styled.div`
+	width: 100%;
+	height: calc(100% + ${({ theme }) => theme.display.height }px);
+	position: absolute;
+	top: -${({ theme }) => theme.display.height }px;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	z-index: 999;
+	display: none;
+	
+	&.visible {
+		display: block;
+	}
+`;
 
+const Board = observer(() => {
+	const app = useApp();
 	const game = useGame();
+
 	const { route, routeDispatcher } = useRoutes();
 
 	const resetIfGameOver = () => {
@@ -69,10 +87,12 @@ const Board = () => {
 			})
 		}
 
+			<PageDimmer className={ app.settingsMenuVisible && 'visible'} />
 			<Settings />
+
 		
 		</GameBoard>
 	);
-};
+});
 
 export default Board;

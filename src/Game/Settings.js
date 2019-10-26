@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { useRoutes } from '../context/RouteStore';
 import { useApp } from '../context/AppContext';
 import { observer } from 'mobx-react-lite';
+import ButtonLink from '../components/ButtonLink';
 
 import styled from 'styled-components';
 
@@ -82,7 +82,6 @@ const BottomContainer = styled.div`
 const Settings = observer(() => {
 	const game = useGame();
 	const app = useApp();
-	const { routeDispatcher } = useRoutes();
 
 	const [ randomBg, setRandomBg ] = useState(JSON.parse(localStorage.getItem('bgenabled')));
 
@@ -94,13 +93,6 @@ const Settings = observer(() => {
 		const newValue = !randomBg;
 		setRandomBg(newValue);
 		localStorage.setItem('bgenabled', newValue);
-	}
-
-	const showScoreBoard = () => {
-		routeDispatcher({
-			type: 'navigate',
-			page: 'scores',
-		});
 	}
 
 	return (
@@ -148,7 +140,7 @@ const Settings = observer(() => {
 				</InputContainer>
 
 				<BottomContainer>
-					<button onClick={ showScoreBoard }>Score Board</button>
+					<ButtonLink to='scores'>Score Board</ButtonLink>
 				</BottomContainer>
 
 

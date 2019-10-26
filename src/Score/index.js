@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import styled from 'styled-components';
-import { useRoutes } from '../context/RouteStore';
+import ButtonLink from '../components/ButtonLink';
 
 const ScoresContainer = styled.div`
 	padding: 10px;
@@ -12,28 +12,24 @@ const ScoresContainer = styled.div`
 
 const Score = () => {
 	const app = useApp();
-	const { routeDispatcher } = useRoutes();
-
+	
 	const [ scores, setScores ] = useState([]);
+
+	// Wrapped in useEffect to facilitate unmounting of component
 	useEffect(() => {
 		app.getScores().then(results => setScores(results));
 	}, []);
 
-	const goBack = () => {
-		routeDispatcher({
-			type: 'navigate',
-			page: '',
-		});
-	};
-
 	return (
 		<ScoresContainer>
 			<header>
-				<h1>Score Board</h1>
-				<a onClick={ goBack }>Go Back</a>
+				<h1>
+					Score Board
+					<ButtonLink to='' style={ { float: 'left' } }>Go Back!</ButtonLink>
+				</h1>
 			</header>
 
-			<table>
+			<table style={ { width: '100%' } }>
 				<thead>
 					<tr>
 						<th>Name</th>

@@ -1,7 +1,5 @@
-import { observable, action, extendObservable } from "mobx";
-import { Stitch, RemoteMongoClient, UserApiKeyCredential, AnonymousCredential } from 'mongodb-stitch-browser-sdk';
-
-const APP_ID = process.env.REACT_APP_MONGO_API_KEY;
+import { observable, action } from "mobx";
+import { Stitch, RemoteMongoClient, UserApiKeyCredential } from 'mongodb-stitch-browser-sdk';
 
 class AppStore {
 	db;

@@ -1,10 +1,12 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { useGame } from './GameContext';
+import { useApp } from './AppContext';
 
 export const RouteContext = createContext();
 
 export const RouteProvider = ({children }) => {
 	const game = useGame();
+	const app = useApp();
 
 	const initialState = {
 		currentPage: window.location.hash.replace('#', '') || '',
@@ -20,6 +22,7 @@ export const RouteProvider = ({children }) => {
 		switch (action.type) {
 			case 'navigate':
 				window.location.hash = `#${action.page}`;
+				app.settingsMenuVisible = false;
 				return {
 					...state,
 					currentPage: action.page,

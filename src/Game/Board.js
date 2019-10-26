@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import { useGame } from '../context/GameContext';
 import { useRoutes } from '../context/RouteStore';
 import { observer } from 'mobx-react-lite';
-import { toJS } from 'mobx';
 import { useApp } from '../context/AppContext';
 
 const Row = styled.div`

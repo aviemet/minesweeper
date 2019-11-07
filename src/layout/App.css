@@ -49,3 +49,7 @@ thead {
 td, th {
 	padding: 10px;
 }
+
+tr:nth-child(even) {
+	background: #EAEAEA;
+}

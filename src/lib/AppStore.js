@@ -51,8 +51,8 @@ class AppStore {
 		}, data));
 	}
 
-	async getScores() {
-		return await this.db.collection('scores').find({}).toArray();
+	async getScores(difficulty) {
+		return await this.db.collection('scores').find({ difficulty }, { sort: { score: 1, createdAt: -1 } }).toArray();
 	}
 }
 

@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import styled from 'styled-components';
 import ButtonLink from '../components/ButtonLink';
 import ScoresTable from './ScoresTable';
+import Tabs from './Tabs';
 
 const Score = () => {
 	const app = useApp();
@@ -29,20 +30,11 @@ const Score = () => {
 				</h1>
 			</header>
 
-			<Tabs>
-				<Tab 
-					className={ showDiff === 'medium' && 'active' }
-					onClick={ () => setShowDiff('medium') }
-				>Easy</Tab>
-				<Tab 
-					className={ showDiff === 'medium' && 'active' }
-					onClick={ () => setShowDiff('medium') }
-				>Medium</Tab>
-				<Tab 
-					className={ showDiff === 'hard' && 'active' }
-					onClick={ () => setShowDiff('hard') }
-				>Hard</Tab>
-			</Tabs>
+			<Tabs 
+				active={ showDiff } 
+				action={ setShowDiff }
+				tabs={ ['Easy', 'Medium', 'Hard'] }
+			/>
 			<Section>
 				<ScoresTable scores={ scores } />
 			</Section>
@@ -65,24 +57,5 @@ const Section = styled.div`
 	min-height: 75%;
 	overflow-y: auto;
 `;
-
-const Tabs = styled.div`
-	text-align: left;
-`;
-
-const Tab = styled.div`
-	border-radius: 10px 10px 0 0;
-	border: 1px solid #111;
-	border-bottom: none;
-	display: inline-block;
-	padding: 5px 10px;
-	background: #CCC;
-	cursor: pointer;
-
-	&.active {
-		background: #FFF;
-	}
-`;
-
 
 export default Score;

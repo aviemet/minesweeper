@@ -12,7 +12,10 @@ const Link = styled.button`
 const ButtonLink = ({ to, children, ...rest }) => {
 	const { routeDispatcher } = useRoutes();
 
-	const doNavigation = () => {
+	const doNavigation = e => {
+		// Prevent clicking the link from being captured by board reset event listener
+		e.stopPropagation();
+
 		routeDispatcher({
 			type: 'navigate',
 			page: to,
